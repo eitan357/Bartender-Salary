@@ -96,6 +96,51 @@ function getRecentEntries() {
 }
 
 // =============================================
+// ריענון כל הגליונות
+// =============================================
+
+function fixAllSheets() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheets = ss.getSheets();
+  const CL = colLetter;
+  let totalFixed = 0;
+  const report = [];
+
+  sheets.forEach(sheet => {
+    const name = sheet.getName();
+    // עבד רק גליונות שמתאימים לפורמט "חודש שנה"
+    const isMonthSheet = MONTHS_HE.some(m => name.startsWith(m));
+    if (!isMonthSheet) return;
+
+    const lastData = getLastDataRow(sheet);
+    if (lastData < DATA_START_ROW) {
+      report.push(name + ': אין נתונים');
+      return;
+    }
+
+    let fixed = 0;
+    for (let r = DATA_START_ROW; r <= lastData; r++) {
+      if (sheet.getRange(r, COL.DATE).getValue() === '') continue;
+      sheet.getRange(r, COL.TOTAL).setFormula(`=${CL(COL.CASH)}${r}+${CL(COL.CHECK)}${r}`);
+      sheet.getRange(r, COL.DIFF) .setFormula(`=${CL(COL.TOTAL)}${r}-${CL(COL.OWED)}${r}`);
+      applyRowFormat(sheet, r);
+      fixed++;
+    }
+
+    writeSummarySection(sheet);
+    addConditionalFormatting(sheet);
+
+    report.push(name + ': ' + fixed + ' שורות');
+    totalFixed += fixed;
+  });
+
+  Logger.log('=== תיקון גליונות ===');
+  report.forEach(line => Logger.log(line));
+  Logger.log('סה"כ שורות שתוקנו: ' + totalFixed);
+  return { fixed: totalFixed, report: report };
+}
+
+// =============================================
 // תפריט
 // =============================================
 
@@ -104,8 +149,9 @@ function onOpen() {
     .createMenu('💰 ניהול הכנסות')
     .addItem('➕  הוסף יום חדש',          'showAddEntryDialog')
     .addSeparator()
-    .addItem('📅  צור גליון לחודש זה',   'createCurrentMonthSheetMenu')
-    .addItem('🔄  רענן נוסחאות ועיצוב',  'refreshCurrentSheetSummary')
+    .addItem('📅  צור גליון לחודש זה',         'createCurrentMonthSheetMenu')
+    .addItem('🔄  רענן נוסחאות ועיצוב',        'refreshCurrentSheetSummary')
+    .addItem('🛠️  תקן גליון ישן (המר לנוסחאות)', 'fixOldSheet')
     .addSeparator()
     .addItem('📊  עדכן לוח מחוונים',     'updateDashboard')
     .toUi();
@@ -313,6 +359,40 @@ function refreshCurrentSheetSummary() {
   writeSummarySection(sheet);
   addConditionalFormatting(sheet);
   SpreadsheetApp.getUi().alert('🔄 הנוסחאות והעיצוב עודכנו!');
+}
+
+// ממיר גליון ישן (ערכים קשיחים) לנוסחאות אוטומטיות
+function fixOldSheet() {
+  const sheet    = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const lastData = getLastDataRow(sheet);
+
+  if (lastData < DATA_START_ROW) {
+    SpreadsheetApp.getUi().alert('אין נתונים לתיקון בגליון זה.');
+    return;
+  }
+
+  const CL = colLetter;
+  let fixed = 0;
+
+  for (let r = DATA_START_ROW; r <= lastData; r++) {
+    // דלג על שורות ריקות
+    if (sheet.getRange(r, COL.DATE).getValue() === '') continue;
+
+    // החלף ערכים קשיחים בנוסחאות
+    sheet.getRange(r, COL.TOTAL)
+      .setFormula(`=${CL(COL.CASH)}${r}+${CL(COL.CHECK)}${r}`);
+    sheet.getRange(r, COL.DIFF)
+      .setFormula(`=${CL(COL.TOTAL)}${r}-${CL(COL.OWED)}${r}`);
+
+    applyRowFormat(sheet, r);
+    fixed++;
+  }
+
+  // עדכן סיכום ועיצוב תנאי
+  writeSummarySection(sheet);
+  addConditionalFormatting(sheet);
+
+  SpreadsheetApp.getUi().alert(`✅ תוקנו ${fixed} שורות — כל עמודות סה"כ והפרש הן עכשיו נוסחאות!`);
 }
 
 function writeSummarySection(sheet) {
