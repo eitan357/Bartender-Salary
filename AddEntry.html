@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    direction: rtl;
+    background: #f0f2ff;
+    padding: 16px;
+    color: #333;
+    font-size: 14px;
+  }
+
+  h3 {
+    color: #1a237e;
+    font-size: 17px;
+    font-weight: 700;
+    border-bottom: 3px solid #1565c0;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+
+  .form-group { margin-bottom: 13px; }
+
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 4px;
+    font-size: 12.5px;
+    color: #444;
+  }
+
+  input[type="date"],
+  input[type="number"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1.5px solid #c5cae9;
+    border-radius: 7px;
+    font-size: 14px;
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    color: #222;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #1565c0;
+    box-shadow: 0 0 0 3px rgba(21,101,192,0.12);
+  }
+
+  .row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .currency-wrap { position: relative; }
+  .currency-wrap input { padding-right: 28px; }
+  .currency-sym {
+    position: absolute;
+    right: 10px; top: 50%;
+    transform: translateY(-50%);
+    color: #888; pointer-events: none;
+  }
+
+  /* כרטיס סה"כ */
+  .totals-card {
+    background: #e8eaf6;
+    border: 1.5px solid #9fa8da;
+    border-radius: 9px;
+    padding: 11px 14px;
+    margin: 14px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .total-item { text-align: center; flex: 1; }
+  .total-label { font-size: 11px; color: #5c6bc0; font-weight: 600; margin-bottom: 3px; }
+  .total-value {
+    font-size: 15px; font-weight: 700; color: #1a237e;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .diff-badge {
+    border-radius: 8px;
+    padding: 6px 12px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .diff-pos   { background: #e8f5e9; color: #1b5e20; }
+  .diff-neg   { background: #ffebee; color: #b71c1c; }
+  .diff-zero  { background: #e3f2fd; color: #0d47a1; }
+
+  .btn {
+    width: 100%; padding: 10px;
+    border: none; border-radius: 8px;
+    font-size: 14px; font-weight: 700;
+    cursor: pointer; margin-top: 6px;
+    transition: background 0.2s;
+  }
+  .btn-save  { background: #1565c0; color: #fff; }
+  .btn-save:hover  { background: #0d47a1; }
+  .btn-save:disabled { background: #90a4ae; cursor: default; }
+  .btn-clear { background: #e0e0e0; color: #444; margin-top: 6px; }
+  .btn-clear:hover { background: #bdbdbd; }
+
+  .status {
+    display: none; margin-top: 10px;
+    padding: 9px; border-radius: 7px;
+    text-align: center; font-weight: 600; font-size: 13px;
+  }
+  .status.ok  { display: block; background: #e8f5e9; color: #1b5e20; }
+  .status.err { display: block; background: #ffebee; color: #b71c1c; }
+
+  textarea { resize: none; }
+</style>
+</head>
+<body>
+<h3>➕ הוסף יום חדש</h3>
+
+<div class="form-group row-2">
+  <div>
+    <label for="date">📅 תאריך</label>
+    <input type="date" id="date" required>
+  </div>
+  <div>
+    <label for="shift">🎯 סוג משמרת</label>
+    <select id="shift">
+      <option value="">-- בחר --</option>
+      <option value="בוקר">בוקר</option>
+      <option value="צהריים">צהריים</option>
+      <option value="ערב">ערב</option>
+      <option value="לילה">לילה</option>
+      <option value="כפולה">משמרת כפולה</option>
+    </select>
+  </div>
+</div>
+
+<div class="form-group">
+  <label for="owed">💵 סכום מגיע (המדויק)</label>
+  <div class="currency-wrap">
+    <span class="currency-sym">₪</span>
+    <input type="number" id="owed" step="0.01" min="0" placeholder="0.00" oninput="calc()">
+  </div>
+</div>
+
+<div class="form-group row-2">
+  <div>
+    <label for="cash">💰 מזומן שהתקבל</label>
+    <div class="currency-wrap">
+      <span class="currency-sym">₪</span>
+      <input type="number" id="cash" step="0.01" min="0" placeholder="0.00" oninput="calc()">
+    </div>
+  </div>
+  <div>
+    <label for="check">🏦 צ'ק</label>
+    <div class="currency-wrap">
+      <span class="currency-sym">₪</span>
+      <input type="number" id="check" step="0.01" min="0" placeholder="0.00" oninput="calc()">
+    </div>
+  </div>
+</div>
+
+<!-- כרטיס סיכום חישוב -->
+<div class="totals-card">
+  <div class="total-item">
+    <div class="total-label">מגיע</div>
+    <div class="total-value" id="dispOwed">₪0.00</div>
+  </div>
+  <div class="total-item">
+    <div class="total-label">מזומן + צ'ק</div>
+    <div class="total-value" id="dispTotal">₪0.00</div>
+  </div>
+</div>
+
+<div class="diff-badge diff-zero" id="diffBadge">הפרש: ₪0.00</div>
+
+<div class="form-group">
+  <label for="notes">📝 הערות</label>
+  <textarea id="notes" rows="2" placeholder="הערה רשות..."></textarea>
+</div>
+
+<button class="btn btn-save"  id="btnSave"  onclick="save()">✅ שמור</button>
+<button class="btn btn-clear" onclick="reset()">🔄 נקה טופס</button>
+
+<div id="status" class="status"></div>
+
+<script>
+  // הגדרת תאריך היום כברירת מחדל
+  const today = new Date();
+  const yyyy  = today.getFullYear();
+  const mm    = String(today.getMonth() + 1).padStart(2, '0');
+  const dd    = String(today.getDate()).padStart(2, '0');
+  document.getElementById('date').value = yyyy + '-' + mm + '-' + dd;
+
+  function fmt(n) { return '₪' + n.toFixed(2); }
+
+  function calc() {
+    const owed  = parseFloat(document.getElementById('owed').value)  || 0;
+    const cash  = parseFloat(document.getElementById('cash').value)  || 0;
+    const chk   = parseFloat(document.getElementById('check').value) || 0;
+    const total = cash + chk;
+    const diff  = total - owed;
+
+    document.getElementById('dispOwed').textContent  = fmt(owed);
+    document.getElementById('dispTotal').textContent = fmt(total);
+
+    const badge = document.getElementById('diffBadge');
+    badge.className = 'diff-badge';
+    if (diff > 0.005) {
+      badge.classList.add('diff-pos');
+      badge.textContent = 'הפרש: +' + fmt(diff) + '  (קיבלת יותר ✓)';
+    } else if (diff < -0.005) {
+      badge.classList.add('diff-neg');
+      badge.textContent = 'הפרש: -' + fmt(Math.abs(diff)) + '  (עוד חסר ⚠️)';
+    } else {
+      badge.classList.add('diff-zero');
+      badge.textContent = 'הפרש: ₪0.00  (מדויק! ✓)';
+    }
+  }
+
+  function save() {
+    const dateVal = document.getElementById('date').value;
+    if (!dateVal) { alert('נא להזין תאריך'); return; }
+
+    const btn = document.getElementById('btnSave');
+    btn.disabled = true;
+    btn.textContent = '⏳ שומר...';
+    document.getElementById('status').className = 'status';
+
+    google.script.run
+      .withSuccessHandler(function(res) {
+        showStatus(res.message, res.success ? 'ok' : 'err');
+        btn.disabled = false;
+        btn.textContent = '✅ שמור';
+        if (res.success) reset();
+      })
+      .withFailureHandler(function(e) {
+        showStatus('שגיאה: ' + e.message, 'err');
+        btn.disabled = false;
+        btn.textContent = '✅ שמור';
+      })
+      .addEntry({
+        date:  dateVal,
+        shift: document.getElementById('shift').value,
+        owed:  document.getElementById('owed').value,
+        cash:  document.getElementById('cash').value,
+        check: document.getElementById('check').value,
+        notes: document.getElementById('notes').value
+      });
+  }
+
+  function reset() {
+    document.getElementById('date').value  = yyyy + '-' + mm + '-' + dd;
+    document.getElementById('shift').value = '';
+    ['owed','cash','check','notes'].forEach(id => document.getElementById(id).value = '');
+    calc();
+  }
+
+  function showStatus(msg, cls) {
+    const el = document.getElementById('status');
+    el.textContent = msg;
+    el.className   = 'status ' + cls;
+  }
+</script>
+</body>
+</html>
