@@ -2,298 +2,289 @@
 <html dir="rtl" lang="he">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#1a237e">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>הכנסות ברמן</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-:root {
-  --blue:    #1565c0;
-  --dark:    #1a237e;
-  --green:   #1b5e20;
-  --green-l: #e8f5e9;
-  --red:     #b71c1c;
-  --red-l:   #ffebee;
-  --gray:    #f0f2f8;
-  --border:  #dde1f0;
-  --text:    #111827;
-  --muted:   #6b7280;
-  --r:       16px;
-}
-
-html { font-size: 16px; }
-
-body {
+/*
+  כל הגדלים ב-vw כדי לעבוד נכון בתוך ה-sandbox של Apps Script.
+  על מסך 390px: 1vw = 3.9px → 4.5vw ≈ 17.5px
+*/
+html  { font-size: 4.5vw; }
+body  {
   font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
   direction: rtl;
-  background: var(--gray);
-  color: var(--text);
-  min-height: 100svh;
-  padding-bottom: 100px; /* מקום לכפתור קבוע */
+  background: #eef0f8;
+  color: #111;
+  min-height: 100vh;
+  padding-bottom: 20vw;        /* מקום לכפתור הצמוד */
   -webkit-font-smoothing: antialiased;
 }
 
-/* ─── HEADER ─── */
-.top-bar {
-  background: var(--dark);
-  padding: 18px 20px 12px;
-  padding-top: calc(18px + env(safe-area-inset-top));
+/* ── HEADER ── */
+.hdr {
+  background: #1a237e;
+  padding: 4vw 5vw 3vw;
 }
-.top-bar h1 { font-size: 22px; font-weight: 800; color: #fff; }
+.hdr-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3vw;
+}
+.hdr h1 { font-size: 5.5vw; font-weight: 900; color: #fff; }
+.month-chip {
+  background: rgba(255,255,255,.18);
+  color: rgba(255,255,255,.9);
+  font-size: 3.5vw;
+  font-weight: 700;
+  padding: 1vw 3vw;
+  border-radius: 10vw;
+}
 
-/* ─── SUMMARY ROW ─── */
-.summary-row {
-  background: var(--dark);
+/* ── SUMMARY STRIP ── */
+.summary {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  padding: 0 16px 16px;
+  gap: 2vw;
 }
 .s-box {
   background: rgba(255,255,255,.13);
-  border-radius: 12px;
-  padding: 10px 8px;
+  border-radius: 3vw;
+  padding: 2.5vw 2vw;
   text-align: center;
 }
-.s-lbl { font-size: 11px; color: rgba(255,255,255,.65); font-weight: 600; margin-bottom: 4px; }
-.s-val { font-size: 17px; font-weight: 900; color: #fff; }
+.s-lbl { font-size: 3vw; color: rgba(255,255,255,.65); font-weight: 700; margin-bottom: 1vw; }
+.s-val { font-size: 4.5vw; font-weight: 900; color: #fff; }
 .s-box.pos { background: rgba(27,94,32,.5); }
 .s-box.pos .s-val { color: #a5d6a7; }
 .s-box.neg { background: rgba(183,28,28,.5); }
 .s-box.neg .s-val { color: #ef9a9a; }
 
-/* ─── SECTION CARD ─── */
-.sec {
+/* ── CARD ── */
+.card {
   background: #fff;
-  border-radius: var(--r);
-  margin: 14px 12px 0;
+  border-radius: 4vw;
+  margin: 3.5vw 3.5vw 0;
   overflow: hidden;
+  box-shadow: 0 0.5vw 2vw rgba(0,0,0,.08);
 }
-.sec-title {
-  font-size: 13px;
+.card-title {
+  font-size: 3.8vw;
   font-weight: 800;
-  color: var(--blue);
-  padding: 16px 18px 0;
-  letter-spacing: .2px;
+  color: #1565c0;
+  padding: 4vw 4.5vw 0;
 }
 
-/* ─── FORM ─── */
-.form-pad { padding: 14px 18px 18px; }
+/* ── FORM ── */
+.form-body { padding: 3.5vw 4.5vw 4.5vw; }
 
-.frow { display: grid; gap: 12px; margin-bottom: 12px; }
-.frow-2 { grid-template-columns: 1fr 1fr; }
-.frow-3 { grid-template-columns: 1fr 1fr 1fr; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3vw; margin-bottom: 3vw; }
+.solo { margin-bottom: 3vw; }
 
-.frow:last-child { margin-bottom: 0; }
-
-.fld { display: flex; flex-direction: column; gap: 6px; }
+.fld { display: flex; flex-direction: column; gap: 1.5vw; }
 .fld label {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--muted);
+  font-size: 3.2vw;
+  font-weight: 800;
+  color: #6b7280;
   text-transform: uppercase;
-  letter-spacing: .5px;
+  letter-spacing: .06em;
 }
 
-/* ─── INPUTS ─── */
+/* ── INPUTS ── */
 input[type="date"],
 input[type="number"],
 input[type="text"] {
   width: 100%;
-  height: 52px;
-  padding: 0 14px;
-  border: 2px solid var(--border);
-  border-radius: 12px;
-  font-size: 17px;
+  height: 13.5vw;
+  padding: 0 3.5vw;
+  border: 0.6vw solid #d1d5f0;
+  border-radius: 3vw;
+  font-size: 4.5vw;
   font-weight: 600;
-  color: var(--text);
-  background: var(--gray);
+  color: #111;
+  background: #f4f6fb;
   -webkit-appearance: none;
   appearance: none;
   transition: border .15s, box-shadow .15s;
 }
 input:focus {
   outline: none;
-  border-color: var(--blue);
+  border-color: #1565c0;
   background: #fff;
-  box-shadow: 0 0 0 4px rgba(21,101,192,.12);
+  box-shadow: 0 0 0 1vw rgba(21,101,192,.12);
 }
 
-/* ─── SHIFT BUTTONS ─── */
-.shift-pills {
+/* ── SHIFT PILLS ── */
+.pills {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  gap: 2.5vw;
 }
 .pill {
-  height: 56px;
-  border: 2px solid var(--border);
-  border-radius: 12px;
-  background: var(--gray);
+  height: 16vw;
+  border: 0.6vw solid #d1d5f0;
+  border-radius: 3vw;
+  background: #f4f6fb;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 0.5vw;
   cursor: pointer;
   transition: all .15s;
-  -webkit-tap-highlight-color: transparent;
 }
-.pill:active { transform: scale(.95); }
-.pill .pi  { font-size: 20px; }
-.pill .pt  { font-size: 13px; font-weight: 700; color: var(--muted); }
-.pill.on   {
-  border-color: var(--blue);
+.pill:active { transform: scale(.94); }
+.pill-icon { font-size: 6.5vw; }
+.pill-text { font-size: 3.5vw; font-weight: 800; color: #6b7280; }
+.pill.on {
+  border-color: #1565c0;
   background: #e8eaf6;
 }
-.pill.on .pt { color: var(--blue); }
+.pill.on .pill-text { color: #1565c0; }
 
-/* ─── LIVE CALC ─── */
-.calc-strip {
+/* ── LIVE CALC ── */
+.calc-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin: 12px 0 8px;
+  gap: 2.5vw;
+  margin: 3vw 0 2vw;
 }
 .c-box {
   background: #e8eaf6;
-  border-radius: 12px;
-  padding: 12px;
+  border-radius: 3vw;
+  padding: 3vw 2vw;
   text-align: center;
 }
-.c-lbl { font-size: 11px; color: var(--muted); font-weight: 700; margin-bottom: 4px; }
-.c-val { font-size: 20px; font-weight: 900; color: var(--dark); }
+.c-lbl { font-size: 3vw; color: #5c6bc0; font-weight: 700; margin-bottom: 1vw; }
+.c-val { font-size: 5.5vw; font-weight: 900; color: #1a237e; }
 
-.diff-tag {
-  border-radius: 12px;
-  padding: 12px;
+.diff-bar {
+  border-radius: 3vw;
+  padding: 3vw 4vw;
   text-align: center;
-  font-size: 15px;
+  font-size: 4vw;
   font-weight: 800;
-  margin-bottom: 14px;
+  margin-bottom: 3vw;
 }
-.dt-pos  { background: var(--green-l); color: var(--green); }
-.dt-neg  { background: var(--red-l);   color: var(--red);   }
-.dt-zero { background: #e3f2fd;        color: #0d47a1;      }
+.d-pos  { background: #e8f5e9; color: #1b5e20; }
+.d-neg  { background: #ffebee; color: #b71c1c; }
+.d-zero { background: #e3f2fd; color: #0d47a1; }
 
-/* ─── STICKY SAVE ─── */
+/* ── STICKY SAVE ── */
 .save-bar {
   position: fixed;
   bottom: 0; left: 0; right: 0;
-  padding: 12px 16px;
-  padding-bottom: calc(12px + env(safe-area-inset-bottom));
-  background: rgba(255,255,255,.95);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-top: 1px solid var(--border);
+  padding: 3vw 4vw;
+  background: rgba(255,255,255,.96);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-top: 0.3vw solid #e0e0e0;
   z-index: 100;
 }
 .btn-save {
   width: 100%;
-  height: 54px;
-  background: var(--blue);
+  height: 14vw;
+  background: #1565c0;
   color: #fff;
   border: none;
-  border-radius: 14px;
-  font-size: 18px;
-  font-weight: 800;
+  border-radius: 3.5vw;
+  font-size: 5vw;
+  font-weight: 900;
   cursor: pointer;
   transition: background .12s, transform .08s;
 }
-.btn-save:active { transform: scale(.97); background: var(--dark); }
+.btn-save:active { transform: scale(.97); background: #1a237e; }
 .btn-save:disabled { background: #b0bec5; transform: none; }
 
-/* ─── RECENT ─── */
-.recent-pad { padding: 8px 18px 16px; }
+/* ── RECENT ── */
+.recent-body { padding: 2vw 4.5vw 4vw; }
 .r-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 13px 0;
-  border-bottom: 1px solid var(--gray);
+  padding: 3.5vw 0;
+  border-bottom: 0.3vw solid #eef0f8;
 }
 .r-item:last-child { border-bottom: none; }
-.r-date  { font-size: 16px; font-weight: 800; }
-.r-meta  { font-size: 12px; color: var(--muted); margin-top: 2px; }
-.r-amt   { font-size: 18px; font-weight: 900; text-align: left; }
-.r-diff  { font-size: 12px; font-weight: 700; text-align: left; margin-top: 2px; }
-.pos { color: var(--green); }
-.neg { color: var(--red);   }
+.r-date  { font-size: 4.2vw; font-weight: 800; }
+.r-meta  { font-size: 3.2vw; color: #6b7280; margin-top: 0.8vw; }
+.r-amt   { font-size: 5vw; font-weight: 900; text-align: left; }
+.r-diff  { font-size: 3.2vw; font-weight: 700; text-align: left; margin-top: 0.8vw; }
+.pos { color: #1b5e20; }
+.neg { color: #b71c1c; }
+.empty { text-align: center; color: #9ca3af; padding: 5vw 0; font-size: 4vw; }
 
-.empty { text-align: center; color: var(--muted); padding: 20px 0; font-size: 14px; }
-
-/* ─── WARN ─── */
+/* ── WARN ── */
 .warn {
-  margin: 14px 12px 0;
+  margin: 3.5vw 3.5vw 0;
   background: #fff8e1;
-  border-radius: 14px;
-  padding: 13px 16px;
-  font-size: 12px;
+  border-radius: 4vw;
+  padding: 3.5vw 4vw;
+  font-size: 3.5vw;
   color: #e65100;
   text-align: center;
   line-height: 1.6;
   font-style: italic;
 }
 
-/* ─── TOAST ─── */
+/* ── TOAST ── */
 #toast {
   position: fixed;
-  top: 24px; left: 50%;
-  transform: translateX(-50%) translateY(-80px);
-  padding: 13px 26px;
-  border-radius: 30px;
-  font-size: 15px; font-weight: 700;
+  top: 4vw; left: 50%;
+  transform: translateX(-50%) translateY(-30vw);
+  padding: 3.5vw 7vw;
+  border-radius: 15vw;
+  font-size: 4vw; font-weight: 800;
   white-space: nowrap;
   z-index: 999;
   transition: transform .3s cubic-bezier(.34,1.56,.64,1);
   pointer-events: none;
-  box-shadow: 0 4px 24px rgba(0,0,0,.2);
+  box-shadow: 0 1vw 5vw rgba(0,0,0,.2);
 }
 #toast.in { transform: translateX(-50%) translateY(0); }
-#toast.ok  { background: var(--green); color: #fff; }
-#toast.err { background: var(--red);   color: #fff; }
+#toast.ok  { background: #1b5e20; color: #fff; }
+#toast.err { background: #b71c1c; color: #fff; }
 
-/* ─── SKELETON ─── */
-.sk {
-  display: block;
-  border-radius: 8px;
-  background: linear-gradient(90deg,rgba(255,255,255,.15) 25%,rgba(255,255,255,.3) 50%,rgba(255,255,255,.15) 75%);
+/* ── SKELETON ── */
+.sk-dark {
+  display: block; border-radius: 2vw;
+  background: linear-gradient(90deg,rgba(255,255,255,.12) 25%,rgba(255,255,255,.28) 50%,rgba(255,255,255,.12) 75%);
   background-size: 200% 100%;
-  animation: sh 1.2s infinite;
+  animation: sh 1.3s infinite;
 }
 .sk-light {
-  border-radius: 8px;
+  display: block; border-radius: 2vw;
   background: linear-gradient(90deg,#e8eaf6 25%,#f0f0f5 50%,#e8eaf6 75%);
   background-size: 200% 100%;
-  animation: sh 1.2s infinite;
+  animation: sh 1.3s infinite;
 }
 @keyframes sh { from{background-position:200% 0} to{background-position:-200% 0} }
 </style>
 </head>
 <body>
 
-<!-- TOP BAR -->
-<div class="top-bar">
-  <h1>💰 הכנסות ברמן</h1>
-</div>
-
-<!-- SUMMARY ROW -->
-<div class="summary-row" id="summaryRow">
-  <div class="s-box"><span class="sk" style="height:12px;width:60%;display:block;margin:0 auto 6px"></span><span class="sk" style="height:20px;width:80%;display:block;margin:0 auto"></span></div>
-  <div class="s-box"><span class="sk" style="height:12px;width:60%;display:block;margin:0 auto 6px"></span><span class="sk" style="height:20px;width:80%;display:block;margin:0 auto"></span></div>
-  <div class="s-box"><span class="sk" style="height:12px;width:60%;display:block;margin:0 auto 6px"></span><span class="sk" style="height:20px;width:80%;display:block;margin:0 auto"></span></div>
+<!-- HEADER + SUMMARY -->
+<div class="hdr">
+  <div class="hdr-top">
+    <h1>💰 הכנסות ברמן</h1>
+    <span class="month-chip" id="monthChip">טוען...</span>
+  </div>
+  <div class="summary" id="summary">
+    <div class="s-box"><span class="sk-dark" style="height:3vw;width:55%;margin:0 auto 1.5vw"></span><span class="sk-dark" style="height:5vw;width:70%;margin:0 auto"></span></div>
+    <div class="s-box"><span class="sk-dark" style="height:3vw;width:55%;margin:0 auto 1.5vw"></span><span class="sk-dark" style="height:5vw;width:70%;margin:0 auto"></span></div>
+    <div class="s-box"><span class="sk-dark" style="height:3vw;width:55%;margin:0 auto 1.5vw"></span><span class="sk-dark" style="height:5vw;width:70%;margin:0 auto"></span></div>
+  </div>
 </div>
 
 <!-- FORM CARD -->
-<div class="sec">
-  <div class="sec-title">➕  הוסף יום</div>
-  <div class="form-pad">
+<div class="card">
+  <div class="card-title">➕  הוסף יום</div>
+  <div class="form-body">
 
-    <!-- תאריך + שעות -->
-    <div class="frow frow-2">
+    <div class="row2">
       <div class="fld">
         <label>📅 תאריך</label>
         <input type="date" id="date">
@@ -304,34 +295,31 @@ input:focus {
       </div>
     </div>
 
-    <!-- סוג משמרת -->
-    <div class="frow" style="margin-bottom:12px">
+    <div class="solo">
       <div class="fld">
         <label>🎯 משמרת</label>
-        <div class="shift-pills">
+        <div class="pills">
           <button class="pill" onclick="pick(this,'פתיחה')">
-            <span class="pi">🌅</span><span class="pt">פתיחה</span>
+            <span class="pill-icon">🌅</span><span class="pill-text">פתיחה</span>
           </button>
           <button class="pill" onclick="pick(this,'סגירה')">
-            <span class="pi">🌙</span><span class="pt">סגירה</span>
+            <span class="pill-icon">🌙</span><span class="pill-text">סגירה</span>
           </button>
           <button class="pill" onclick="pick(this,'כפולה')">
-            <span class="pi">⚡</span><span class="pt">כפולה</span>
+            <span class="pill-icon">⚡</span><span class="pill-text">כפולה</span>
           </button>
         </div>
       </div>
     </div>
 
-    <!-- סכום מגיע -->
-    <div class="frow">
+    <div class="solo">
       <div class="fld">
         <label>💵 סכום מגיע (₪)</label>
         <input type="number" id="owed" step="0.01" min="0" placeholder="0" inputmode="decimal" oninput="calc()">
       </div>
     </div>
 
-    <!-- מזומן + צ'ק -->
-    <div class="frow frow-2">
+    <div class="row2" style="margin-bottom:0">
       <div class="fld">
         <label>💰 מזומן (₪)</label>
         <input type="number" id="cash" step="0.01" min="0" placeholder="0" inputmode="decimal" oninput="calc()">
@@ -342,8 +330,7 @@ input:focus {
       </div>
     </div>
 
-    <!-- תצוגה חיה -->
-    <div class="calc-strip">
+    <div class="calc-row">
       <div class="c-box">
         <div class="c-lbl">מגיע</div>
         <div class="c-val" id="cOwed">₪0</div>
@@ -354,34 +341,29 @@ input:focus {
       </div>
     </div>
 
-    <div class="diff-tag dt-zero" id="diffTag">הפרש: ₪0.00</div>
+    <div class="diff-bar d-zero" id="diffBar">הפרש: ₪0.00</div>
 
-    <!-- הערות -->
-    <div class="frow">
-      <div class="fld">
-        <label>📝 הערות</label>
-        <input type="text" id="notes" placeholder="הערה קצרה (רשות)">
-      </div>
+    <div class="fld">
+      <label>📝 הערות</label>
+      <input type="text" id="notes" placeholder="הערה קצרה (רשות)">
     </div>
 
   </div>
 </div>
 
-<!-- הזנות אחרונות -->
-<div class="sec">
-  <div class="sec-title">🕐  אחרונות</div>
-  <div class="recent-pad" id="recentList">
-    <div class="r-item"><div class="sk-light" style="height:40px;width:100%"></div></div>
-    <div class="r-item"><div class="sk-light" style="height:40px;width:100%"></div></div>
-    <div class="r-item"><div class="sk-light" style="height:40px;width:100%"></div></div>
+<!-- RECENT -->
+<div class="card">
+  <div class="card-title">🕐  אחרונות</div>
+  <div class="recent-body" id="recentList">
+    <div class="r-item"><span class="sk-light" style="height:11vw;width:100%"></span></div>
+    <div class="r-item"><span class="sk-light" style="height:11vw;width:100%"></span></div>
+    <div class="r-item"><span class="sk-light" style="height:11vw;width:100%"></span></div>
   </div>
 </div>
 
-<div class="warn">
-  ⚠️ תלוש שכר מתקבל ב-10 לחודש<br>ייתכן שסכומים מתחילת החודש הבא ייכנסו לתלוש הנוכחי
-</div>
+<div class="warn">⚠️ תלוש שכר מגיע ב-10 לחודש<br>ייתכן שסכומים מתחילת החודש הבא ייכנסו לתלוש</div>
 
-<!-- STICKY SAVE -->
+<!-- STICKY SAVE BUTTON -->
 <div class="save-bar">
   <button class="btn-save" id="btnSave" onclick="save()">✅  שמור</button>
 </div>
@@ -390,58 +372,58 @@ input:focus {
 
 <script>
   // תאריך היום
-  const td = new Date();
+  var today = new Date();
   document.getElementById('date').value =
-    td.getFullYear() + '-' +
-    String(td.getMonth()+1).padStart(2,'0') + '-' +
-    String(td.getDate()).padStart(2,'0');
+    today.getFullYear() + '-' +
+    ('0'+(today.getMonth()+1)).slice(-2) + '-' +
+    ('0'+today.getDate()).slice(-2);
 
-  let shiftVal = '';
+  var shiftVal = '';
 
   function pick(btn, val) {
     shiftVal = val;
-    document.querySelectorAll('.pill').forEach(p => p.classList.remove('on'));
+    document.querySelectorAll('.pill').forEach(function(p){ p.classList.remove('on'); });
     btn.classList.add('on');
   }
 
-  function r(n)  { return Math.round(Math.abs(n)).toLocaleString('he-IL'); }
-  function f2(n) { return Math.abs(n).toFixed(2); }
+  function rn(n)  { return Math.round(Math.abs(n)).toLocaleString('he-IL'); }
+  function f2(n)  { return Math.abs(n).toFixed(2); }
 
   function calc() {
-    const owed  = parseFloat(document.getElementById('owed').value)  || 0;
-    const cash  = parseFloat(document.getElementById('cash').value)  || 0;
-    const chk   = parseFloat(document.getElementById('check').value) || 0;
-    const total = cash + chk;
-    const diff  = total - owed;
+    var owed  = parseFloat(document.getElementById('owed').value)  || 0;
+    var cash  = parseFloat(document.getElementById('cash').value)  || 0;
+    var chk   = parseFloat(document.getElementById('check').value) || 0;
+    var total = cash + chk;
+    var diff  = total - owed;
 
-    document.getElementById('cOwed').textContent  = '₪' + r(owed);
-    document.getElementById('cTotal').textContent = '₪' + r(total);
+    document.getElementById('cOwed').textContent  = '₪' + rn(owed);
+    document.getElementById('cTotal').textContent = '₪' + rn(total);
 
-    const tag = document.getElementById('diffTag');
-    tag.className = 'diff-tag';
+    var bar = document.getElementById('diffBar');
+    bar.className = 'diff-bar';
     if (diff > 0.005) {
-      tag.classList.add('dt-pos');
-      tag.textContent = 'הפרש: +₪' + f2(diff) + '  ✓ קיבלת יותר';
+      bar.classList.add('d-pos');
+      bar.textContent = 'הפרש: +₪' + f2(diff) + '  ✓ קיבלת יותר';
     } else if (diff < -0.005) {
-      tag.classList.add('dt-neg');
-      tag.textContent = 'הפרש: -₪' + f2(-diff) + '  ⚠️ עוד חסר';
+      bar.classList.add('d-neg');
+      bar.textContent = 'הפרש: -₪' + f2(-diff) + '  ⚠️ עוד חסר';
     } else {
-      tag.classList.add('dt-zero');
-      tag.textContent = owed > 0 ? 'הפרש: ₪0.00  ✓ מדויק!' : 'הפרש: ₪0.00';
+      bar.classList.add('d-zero');
+      bar.textContent = owed > 0 ? 'הפרש: ₪0.00  ✓ מדויק!' : 'הפרש: ₪0.00';
     }
   }
 
   function save() {
     if (!document.getElementById('date').value) { toast('נא להזין תאריך','err'); return; }
-    const btn = document.getElementById('btnSave');
+    var btn = document.getElementById('btnSave');
     btn.disabled = true; btn.textContent = '⏳ שומר...';
     google.script.run
-      .withSuccessHandler(res => {
+      .withSuccessHandler(function(res) {
         btn.disabled = false; btn.textContent = '✅  שמור';
         toast(res.message, res.success ? 'ok' : 'err');
         if (res.success) { clearForm(); loadSummary(); loadRecent(); }
       })
-      .withFailureHandler(e => {
+      .withFailureHandler(function(e) {
         btn.disabled = false; btn.textContent = '✅  שמור';
         toast('שגיאה: ' + e.message, 'err');
       })
@@ -457,69 +439,63 @@ input:focus {
   }
 
   function clearForm() {
-    const n = new Date();
+    var n = new Date();
     document.getElementById('date').value =
-      n.getFullYear() + '-' + String(n.getMonth()+1).padStart(2,'0') + '-' + String(n.getDate()).padStart(2,'0');
-    ['hours','owed','cash','check','notes'].forEach(id => document.getElementById(id).value = '');
+      n.getFullYear() + '-' + ('0'+(n.getMonth()+1)).slice(-2) + '-' + ('0'+n.getDate()).slice(-2);
+    ['hours','owed','cash','check','notes'].forEach(function(id){ document.getElementById(id).value = ''; });
     shiftVal = '';
-    document.querySelectorAll('.pill').forEach(p => p.classList.remove('on'));
+    document.querySelectorAll('.pill').forEach(function(p){ p.classList.remove('on'); });
     calc();
   }
 
   function toast(msg, type) {
-    const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.className = type;
-    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in')));
+    var el = document.getElementById('toast');
+    el.textContent = msg; el.className = type;
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ el.classList.add('in'); }); });
     clearTimeout(el._t);
-    el._t = setTimeout(() => { el.classList.remove('in'); }, 2600);
+    el._t = setTimeout(function(){ el.classList.remove('in'); }, 2600);
   }
 
   function loadSummary() {
     google.script.run
-      .withSuccessHandler(s => {
-        const d = s.diff, pos = d >= 0;
-        document.getElementById('summaryRow').innerHTML =
-          `<div class="s-box">
-            <div class="s-lbl">ימי עבודה</div>
-            <div class="s-val">${s.days}</div>
-          </div>
-          <div class="s-box">
-            <div class="s-lbl">סכום מגיע</div>
-            <div class="s-val">₪${r(s.owed)}</div>
-          </div>
-          <div class="s-box ${pos?'pos':'neg'}">
-            <div class="s-lbl">הפרש</div>
-            <div class="s-val">${pos?'+':'-'}₪${r(d)}</div>
-          </div>`;
-        document.querySelector('.top-bar h1').textContent = '💰 ' + s.month;
+      .withSuccessHandler(function(s) {
+        document.getElementById('monthChip').textContent = s.month;
+        var d = s.diff, pos = d >= 0;
+        document.getElementById('summary').innerHTML =
+          '<div class="s-box">' +
+            '<div class="s-lbl">ימי עבודה</div>' +
+            '<div class="s-val">' + s.days + '</div>' +
+          '</div>' +
+          '<div class="s-box">' +
+            '<div class="s-lbl">סכום מגיע</div>' +
+            '<div class="s-val">₪' + rn(s.owed) + '</div>' +
+          '</div>' +
+          '<div class="s-box ' + (pos?'pos':'neg') + '">' +
+            '<div class="s-lbl">הפרש</div>' +
+            '<div class="s-val">' + (pos?'+':'-') + '₪' + rn(d) + '</div>' +
+          '</div>';
       })
       .getCurrentMonthSummary();
   }
 
   function loadRecent() {
     google.script.run
-      .withSuccessHandler(list => {
-        const el = document.getElementById('recentList');
+      .withSuccessHandler(function(list) {
+        var el = document.getElementById('recentList');
         if (!list || !list.length) {
           el.innerHTML = '<div class="empty">אין הזנות עדיין החודש</div>';
           return;
         }
-        el.innerHTML = list.map(e => {
-          const diff = parseFloat(e.diff) || 0;
-          const cls  = diff >= 0 ? 'pos' : 'neg';
-          const sign = diff >= 0 ? '+' : '-';
-          const meta = [e.day, e.shift, e.hours ? e.hours + ' שע\'' : ''].filter(Boolean).join(' · ');
-          return `<div class="r-item">
-            <div>
-              <div class="r-date">${e.date}</div>
-              <div class="r-meta">${meta}</div>
-            </div>
-            <div>
-              <div class="r-amt">₪${r(e.received)}</div>
-              <div class="r-diff ${cls}">${sign}₪${f2(Math.abs(diff))}</div>
-            </div>
-          </div>`;
+        el.innerHTML = list.map(function(e) {
+          var diff = parseFloat(e.diff) || 0;
+          var cls  = diff >= 0 ? 'pos' : 'neg';
+          var sign = diff >= 0 ? '+' : '-';
+          var meta = [e.day, e.shift, e.hours ? e.hours + " שע'" : ''].filter(Boolean).join(' · ');
+          return '<div class="r-item">' +
+            '<div><div class="r-date">' + e.date + '</div><div class="r-meta">' + meta + '</div></div>' +
+            '<div><div class="r-amt">₪' + rn(e.received) + '</div>' +
+            '<div class="r-diff ' + cls + '">' + sign + '₪' + f2(Math.abs(diff)) + '</div></div>' +
+          '</div>';
         }).join('');
       })
       .getRecentEntries();
