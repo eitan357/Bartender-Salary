@@ -400,7 +400,7 @@ function writeSummarySection(sheet) {
   const fmt = '₪#,##0.00';
 
   // ניקוי
-  sheet.getRange(SUMMARY_START - 1, 1, 15, NUM_COLS).clearContent().clearFormat();
+  sheet.getRange(SUMMARY_START - 1, 1, 20, NUM_COLS).clearContent().clearFormat();
 
   // קו הפרדה
   sheet.getRange(SUMMARY_START - 1, 1, 1, NUM_COLS).merge()
@@ -443,10 +443,33 @@ function writeSummarySection(sheet) {
     `=SUM(${CL(COL.DIFF)}${DATA_START_ROW}:${CL(COL.DIFF)}${DATA_END_ROW})`,
     fmt, true);
 
-  [r, r + 1, r + 2].forEach(row => sheet.setRowHeight(row, 34));
+  // כותרת ממוצעים
+  sheet.getRange(r + 3, 1, 1, NUM_COLS).merge()
+    .setValue('📈  ממוצעים')
+    .setFontSize(11).setFontWeight('bold').setHorizontalAlignment('center')
+    .setBackground('#e3f2fd').setFontColor('#0d47a1');
+  sheet.setRowHeight(r + 3, 28);
+
+  // שורה 4: ממוצע ליום | ממוצע לשעה
+  writeSummaryFormulaRow(sheet, r + 4,
+    'ממוצע ליום',
+    `=IFERROR(SUM(${CL(COL.TOTAL)}${DATA_START_ROW}:${CL(COL.TOTAL)}${DATA_END_ROW})/COUNTA(A${DATA_START_ROW}:A${DATA_END_ROW}),0)`,
+    fmt, false,
+    'ממוצע לשעה',
+    `=IFERROR(SUM(${CL(COL.TOTAL)}${DATA_START_ROW}:${CL(COL.TOTAL)}${DATA_END_ROW})/SUM(${CL(COL.HOURS)}${DATA_START_ROW}:${CL(COL.HOURS)}${DATA_END_ROW}),0)`,
+    fmt, false);
+
+  // שורה 5: ממוצע שעות ליום
+  writeSummaryFormulaRow(sheet, r + 5,
+    'ממוצע שעות ליום',
+    `=IFERROR(SUM(${CL(COL.HOURS)}${DATA_START_ROW}:${CL(COL.HOURS)}${DATA_END_ROW})/COUNTA(A${DATA_START_ROW}:A${DATA_END_ROW}),0)`,
+    '0.0 "שע\'"', false,
+    null, null, null, false);
+
+  [r, r + 1, r + 2, r + 4, r + 5].forEach(row => sheet.setRowHeight(row, 34));
 
   // הערת תלוש שכר
-  const noteRow = r + 4;
+  const noteRow = r + 7;
   sheet.getRange(noteRow, 1, 1, NUM_COLS).merge()
     .setValue('⚠️  תלוש שכר מתקבל ב-10 לחודש — ייתכן שסכומים מתחילת החודש הבא ייכנסו לתלוש הנוכחי')
     .setFontStyle('italic').setFontSize(10).setHorizontalAlignment('center').setWrap(true)
@@ -466,6 +489,13 @@ function writeSummaryFormulaRow(sheet, row, label1, formula1, fmt1, bold1, label
     .setBackground('#ffffff').setFontColor('#1565c0');
   if (fmt1)  c1.setNumberFormat(fmt1);
   if (bold1) c1.setFontWeight('bold').setFontSize(12);
+
+  // אם אין צד ימין — נקה ואל תכתוב
+  if (!label2) {
+    sheet.getRange(row, 4, 1, NUM_COLS - 3).clearContent().clearFormat()
+      .setBackground('#ffffff');
+    return;
+  }
 
   // רווח
   sheet.getRange(row, 4).setValue('').setBackground('#ffffff');
