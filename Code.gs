@@ -31,6 +31,67 @@ const C_WARN_BG    = '#fff8e1';
 const C_WARN_FG    = '#e65100';
 
 // =============================================
+// WEB APP
+// =============================================
+
+function doGet() {
+  return HtmlService.createHtmlOutputFromFile('WebApp')
+    .setTitle('💰 הכנסות ברמן')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+function getCurrentMonthSummary() {
+  const now   = new Date();
+  const sheet = getOrCreateMonthSheet(now.getFullYear(), now.getMonth());
+  const lastData = getLastDataRow(sheet);
+  const monthLabel = MONTHS_HE[now.getMonth()] + ' ' + now.getFullYear();
+
+  if (lastData < DATA_START_ROW) {
+    return { days:0, owed:0, cash:0, check:0, received:0, diff:0, month: monthLabel };
+  }
+
+  const numRows = lastData - DATA_START_ROW + 1;
+  const data    = sheet.getRange(DATA_START_ROW, 1, numRows, NUM_COLS).getValues();
+  let days=0, owed=0, cash=0, chk=0, received=0, diff=0;
+  data.forEach(row => {
+    if (row[COL.DATE-1] !== '') {
+      days++;
+      owed     += parseFloat(row[COL.OWED -1]) || 0;
+      cash     += parseFloat(row[COL.CASH -1]) || 0;
+      chk      += parseFloat(row[COL.CHECK-1]) || 0;
+      received += parseFloat(row[COL.TOTAL-1]) || 0;
+      diff     += parseFloat(row[COL.DIFF -1]) || 0;
+    }
+  });
+  return { days, owed, cash, check:chk, received, diff, month: monthLabel };
+}
+
+function getRecentEntries() {
+  const now   = new Date();
+  const sheet = getOrCreateMonthSheet(now.getFullYear(), now.getMonth());
+  const lastData = getLastDataRow(sheet);
+  if (lastData < DATA_START_ROW) return [];
+
+  const numRows = lastData - DATA_START_ROW + 1;
+  const data    = sheet.getRange(DATA_START_ROW, 1, numRows, NUM_COLS).getValues();
+  // החזר 5 האחרונים בסדר הפוך
+  return data
+    .filter(r => r[COL.DATE-1] !== '')
+    .slice(-5)
+    .reverse()
+    .map(r => ({
+      date:     r[COL.DATE -1],
+      day:      r[COL.DAY  -1],
+      shift:    r[COL.SHIFT-1],
+      owed:     r[COL.OWED -1],
+      cash:     r[COL.CASH -1],
+      check:    r[COL.CHECK-1],
+      received: r[COL.TOTAL-1],
+      diff:     r[COL.DIFF -1]
+    }));
+}
+
+// =============================================
 // תפריט
 // =============================================
 

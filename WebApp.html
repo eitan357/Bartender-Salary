@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>💰 הכנסות ברמן</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue:    #1565c0;
+    --dark:    #1a237e;
+    --light:   #e8eaf6;
+    --green:   #2e7d32;
+    --green-bg:#e8f5e9;
+    --red:     #c62828;
+    --red-bg:  #ffebee;
+    --warn-bg: #fff8e1;
+    --warn:    #e65100;
+    --radius:  12px;
+  }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    direction: rtl;
+    background: #eceff1;
+    min-height: 100vh;
+    padding-bottom: 32px;
+  }
+
+  /* ---- HEADER ---- */
+  .header {
+    background: var(--dark);
+    color: #fff;
+    padding: 18px 20px 14px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+  }
+  .header h1 { font-size: 19px; font-weight: 700; }
+  .header .sub { font-size: 13px; opacity: .75; margin-top: 2px; }
+
+  /* ---- CARDS ---- */
+  .card {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: 0 1px 6px rgba(0,0,0,.1);
+    margin: 14px 14px 0;
+    padding: 16px;
+  }
+  .card-title {
+    font-size: 13px; font-weight: 700;
+    color: var(--blue);
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  /* ---- SUMMARY GRID ---- */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+  }
+  .sum-item {
+    background: var(--light);
+    border-radius: 9px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+  .sum-item.full  { grid-column: 1/-1; }
+  .sum-label { font-size: 11px; color: #5c6bc0; font-weight: 600; margin-bottom: 3px; }
+  .sum-value { font-size: 17px; font-weight: 800; color: var(--dark); }
+  .sum-item.diff-pos { background: var(--green-bg); }
+  .sum-item.diff-pos .sum-label { color: var(--green); }
+  .sum-item.diff-pos .sum-value { color: var(--green); }
+  .sum-item.diff-neg { background: var(--red-bg); }
+  .sum-item.diff-neg .sum-label { color: var(--red); }
+  .sum-item.diff-neg .sum-value { color: var(--red); }
+
+  /* ---- FORM ---- */
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 11px; }
+  .form-col  { display: flex; flex-direction: column; }
+  .form-full { margin-bottom: 11px; }
+
+  label { font-size: 12px; font-weight: 700; color: #444; margin-bottom: 4px; }
+
+  input[type="date"],
+  input[type="number"],
+  select, textarea {
+    width: 100%;
+    padding: 10px 11px;
+    border: 1.5px solid #c5cae9;
+    border-radius: 9px;
+    font-size: 15px;
+    color: #222;
+    background: #fafafa;
+    -webkit-appearance: none;
+    transition: border-color .15s;
+  }
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--blue);
+    background: #fff;
+  }
+
+  /* live calc card */
+  .calc-card {
+    background: var(--light);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 11px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .calc-item { text-align: center; flex: 1; }
+  .calc-lbl { font-size: 11px; color: #5c6bc0; font-weight: 600; margin-bottom: 3px; }
+  .calc-val { font-size: 16px; font-weight: 800; color: var(--dark); }
+
+  .diff-badge {
+    border-radius: 8px; padding: 8px 12px;
+    text-align: center; font-size: 13px; font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .diff-pos  { background: var(--green-bg); color: var(--green); }
+  .diff-neg  { background: var(--red-bg);   color: var(--red);   }
+  .diff-zero { background: #e3f2fd;          color: #0d47a1;      }
+
+  /* button */
+  .btn-save {
+    width: 100%; padding: 14px;
+    background: var(--blue); color: #fff;
+    border: none; border-radius: 10px;
+    font-size: 16px; font-weight: 700;
+    cursor: pointer; letter-spacing: .3px;
+    transition: background .15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-save:active { background: var(--dark); }
+  .btn-save:disabled { background: #90a4ae; cursor: default; }
+
+  /* status toast */
+  #toast {
+    display: none;
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    padding: 12px 22px; border-radius: 24px;
+    font-size: 14px; font-weight: 700;
+    box-shadow: 0 4px 16px rgba(0,0,0,.2);
+    z-index: 100; white-space: nowrap;
+    transition: opacity .3s;
+  }
+  #toast.ok  { background: var(--green); color: #fff; display: block; }
+  #toast.err { background: var(--red);   color: #fff; display: block; }
+
+  /* ---- RECENT ---- */
+  .recent-item {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 9px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .recent-item:last-child { border-bottom: none; }
+  .recent-date  { font-size: 13px; font-weight: 700; color: #333; }
+  .recent-shift { font-size: 11px; color: #888; }
+  .recent-amount{ font-size: 15px; font-weight: 800; }
+  .recent-diff  { font-size: 11px; font-weight: 600; margin-top: 2px; }
+  .pos { color: var(--green); }
+  .neg { color: var(--red); }
+
+  /* ---- WARN NOTE ---- */
+  .warn-note {
+    background: var(--warn-bg); color: var(--warn);
+    border-radius: 9px; padding: 10px 13px;
+    font-size: 11.5px; font-style: italic; margin-top: 14px;
+    text-align: center; line-height: 1.5;
+  }
+
+  /* loading skeleton */
+  .skel {
+    background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.2s infinite;
+    border-radius: 6px; height: 22px;
+  }
+  @keyframes shimmer { from{background-position:200% 0} to{background-position:-200% 0} }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <h1>💰 הכנסות ברמן</h1>
+  <div class="sub" id="headerMonth">טוען...</div>
+</div>
+
+<!-- SUMMARY -->
+<div class="card">
+  <div class="card-title">📊 סיכום חודשי</div>
+  <div class="summary-grid" id="summaryGrid">
+    <div class="sum-item"><div class="skel"></div></div>
+    <div class="sum-item"><div class="skel"></div></div>
+    <div class="sum-item"><div class="skel"></div></div>
+    <div class="sum-item"><div class="skel"></div></div>
+    <div class="sum-item full"><div class="skel"></div></div>
+  </div>
+</div>
+
+<!-- ADD FORM -->
+<div class="card">
+  <div class="card-title">➕ הוסף יום חדש</div>
+
+  <div class="form-row">
+    <div class="form-col">
+      <label for="date">📅 תאריך</label>
+      <input type="date" id="date">
+    </div>
+    <div class="form-col">
+      <label for="shift">🎯 משמרת</label>
+      <select id="shift">
+        <option value="">-- בחר --</option>
+        <option value="בוקר">בוקר</option>
+        <option value="צהריים">צהריים</option>
+        <option value="ערב">ערב</option>
+        <option value="לילה">לילה</option>
+        <option value="כפולה">כפולה</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-full">
+    <label for="owed">💵 סכום מגיע (המדויק) ₪</label>
+    <input type="number" id="owed" step="0.01" min="0" placeholder="0.00" inputmode="decimal" oninput="calc()">
+  </div>
+
+  <div class="form-row">
+    <div class="form-col">
+      <label for="cash">💰 מזומן ₪</label>
+      <input type="number" id="cash" step="0.01" min="0" placeholder="0.00" inputmode="decimal" oninput="calc()">
+    </div>
+    <div class="form-col">
+      <label for="check">🏦 צ'ק ₪</label>
+      <input type="number" id="check" step="0.01" min="0" placeholder="0.00" inputmode="decimal" oninput="calc()">
+    </div>
+  </div>
+
+  <!-- Live calc -->
+  <div class="calc-card">
+    <div class="calc-item">
+      <div class="calc-lbl">מגיע</div>
+      <div class="calc-val" id="cOwed">₪0</div>
+    </div>
+    <div class="calc-item">
+      <div class="calc-lbl">סה"כ התקבל</div>
+      <div class="calc-val" id="cTotal">₪0</div>
+    </div>
+  </div>
+
+  <div class="diff-badge diff-zero" id="diffBadge">הפרש: ₪0.00</div>
+
+  <div class="form-full">
+    <label for="notes">📝 הערות (רשות)</label>
+    <input type="text" id="notes" placeholder="הערה קצרה...">
+  </div>
+
+  <button class="btn-save" id="btnSave" onclick="save()">✅  שמור</button>
+</div>
+
+<!-- RECENT ENTRIES -->
+<div class="card" id="recentCard">
+  <div class="card-title">🕐 הזנות אחרונות</div>
+  <div id="recentList"><div class="skel" style="margin-bottom:8px"></div><div class="skel" style="margin-bottom:8px"></div><div class="skel"></div></div>
+</div>
+
+<div class="warn-note">
+  ⚠️ תלוש שכר מתקבל ב-10 לחודש<br>ייתכן שסכומים מתחילת החודש הבא ייכנסו לתלוש הנוכחי
+</div>
+
+<div id="toast"></div>
+
+<script>
+  // תאריך ברירת מחדל = היום
+  const t = new Date();
+  document.getElementById('date').value =
+    t.getFullYear() + '-' + String(t.getMonth()+1).padStart(2,'0') + '-' + String(t.getDate()).padStart(2,'0');
+
+  function ils(n) { return '₪' + (Math.abs(n)).toLocaleString('he-IL', {minimumFractionDigits:0, maximumFractionDigits:0}); }
+  function ils2(n){ return '₪' + n.toFixed(2); }
+
+  function calc() {
+    const owed  = parseFloat(document.getElementById('owed').value)  || 0;
+    const cash  = parseFloat(document.getElementById('cash').value)  || 0;
+    const chk   = parseFloat(document.getElementById('check').value) || 0;
+    const total = cash + chk;
+    const diff  = total - owed;
+
+    document.getElementById('cOwed').textContent  = ils(owed);
+    document.getElementById('cTotal').textContent = ils(total);
+
+    const badge = document.getElementById('diffBadge');
+    badge.className = 'diff-badge';
+    if (diff > 0.005) {
+      badge.classList.add('diff-pos');
+      badge.textContent = 'הפרש: +' + ils2(diff) + '  ✓ קיבלת יותר';
+    } else if (diff < -0.005) {
+      badge.classList.add('diff-neg');
+      badge.textContent = 'הפרש: -' + ils2(Math.abs(diff)) + '  ⚠️ עוד חסר';
+    } else {
+      badge.classList.add('diff-zero');
+      badge.textContent = 'הפרש: ₪0.00  ✓ מדויק';
+    }
+  }
+
+  function save() {
+    if (!document.getElementById('date').value) { toast('נא להזין תאריך','err'); return; }
+    const btn = document.getElementById('btnSave');
+    btn.disabled = true; btn.textContent = '⏳ שומר...';
+
+    google.script.run
+      .withSuccessHandler(res => {
+        btn.disabled = false; btn.textContent = '✅  שמור';
+        if (res.success) {
+          toast(res.message, 'ok');
+          clearForm();
+          loadSummary();
+          loadRecent();
+        } else { toast(res.message, 'err'); }
+      })
+      .withFailureHandler(e => {
+        btn.disabled = false; btn.textContent = '✅  שמור';
+        toast('שגיאה: ' + e.message, 'err');
+      })
+      .addEntry({
+        date:  document.getElementById('date').value,
+        shift: document.getElementById('shift').value,
+        owed:  document.getElementById('owed').value,
+        cash:  document.getElementById('cash').value,
+        check: document.getElementById('check').value,
+        notes: document.getElementById('notes').value
+      });
+  }
+
+  function clearForm() {
+    const t2 = new Date();
+    document.getElementById('date').value =
+      t2.getFullYear() + '-' + String(t2.getMonth()+1).padStart(2,'0') + '-' + String(t2.getDate()).padStart(2,'0');
+    ['shift','owed','cash','check','notes'].forEach(id => document.getElementById(id).value = '');
+    calc();
+  }
+
+  function toast(msg, type) {
+    const el = document.getElementById('toast');
+    el.textContent = msg; el.className = type;
+    clearTimeout(el._t);
+    el._t = setTimeout(() => { el.className = ''; el.style.display = 'none'; }, 3000);
+  }
+
+  function loadSummary() {
+    google.script.run
+      .withSuccessHandler(s => {
+        document.getElementById('headerMonth').textContent = s.month;
+        const diff = s.diff;
+        const diffCls = diff >= 0 ? 'diff-pos' : 'diff-neg';
+        const diffSign = diff >= 0 ? '+' : '-';
+        document.getElementById('summaryGrid').innerHTML = `
+          <div class="sum-item">
+            <div class="sum-label">ימי עבודה</div>
+            <div class="sum-value">${s.days}</div>
+          </div>
+          <div class="sum-item">
+            <div class="sum-label">סכום מגיע</div>
+            <div class="sum-value">${ils(s.owed)}</div>
+          </div>
+          <div class="sum-item">
+            <div class="sum-label">מזומן</div>
+            <div class="sum-value">${ils(s.cash)}</div>
+          </div>
+          <div class="sum-item">
+            <div class="sum-label">צ'קים</div>
+            <div class="sum-value">${ils(s.check)}</div>
+          </div>
+          <div class="sum-item full">
+            <div class="sum-label">סה"כ התקבל</div>
+            <div class="sum-value">${ils(s.received)}</div>
+          </div>
+          <div class="sum-item full ${diffCls}">
+            <div class="sum-label">הפרש כולל</div>
+            <div class="sum-value">${diffSign}${ils(Math.abs(diff))}</div>
+          </div>
+        `;
+      })
+      .getCurrentMonthSummary();
+  }
+
+  function loadRecent() {
+    google.script.run
+      .withSuccessHandler(entries => {
+        const el = document.getElementById('recentList');
+        if (!entries.length) { el.innerHTML = '<div style="color:#999;font-size:13px;text-align:center;padding:8px 0">אין הזנות עדיין החודש</div>'; return; }
+        el.innerHTML = entries.map(e => {
+          const diff = parseFloat(e.diff) || 0;
+          const cls  = diff >= 0 ? 'pos' : 'neg';
+          const sign = diff >= 0 ? '+' : '-';
+          return `<div class="recent-item">
+            <div>
+              <div class="recent-date">${e.date}  <span style="font-weight:400;color:#888;font-size:12px">${e.day}${e.shift ? ' · ' + e.shift : ''}</span></div>
+              <div class="recent-diff ${cls}">${sign}${ils2(Math.abs(diff))} הפרש</div>
+            </div>
+            <div style="text-align:left">
+              <div class="recent-amount">${ils(e.received)}</div>
+              <div style="font-size:11px;color:#888">מגיע: ${ils(e.owed)}</div>
+            </div>
+          </div>`;
+        }).join('');
+      })
+      .getRecentEntries();
+  }
+
+  // טעינה ראשונית
+  loadSummary();
+  loadRecent();
+</script>
+</body>
+</html>
