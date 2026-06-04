@@ -133,16 +133,19 @@
     <input type="date" id="date" required>
   </div>
   <div>
-    <label for="shift">🎯 סוג משמרת</label>
-    <select id="shift">
-      <option value="">-- בחר --</option>
-      <option value="בוקר">בוקר</option>
-      <option value="צהריים">צהריים</option>
-      <option value="ערב">ערב</option>
-      <option value="לילה">לילה</option>
-      <option value="כפולה">משמרת כפולה</option>
-    </select>
+    <label for="hours">⏱ שעות</label>
+    <input type="number" id="hours" step="0.5" min="1" max="16" placeholder="8.5">
   </div>
+</div>
+
+<div class="form-group">
+  <label for="shift">🎯 סוג משמרת</label>
+  <select id="shift">
+    <option value="">-- בחר --</option>
+    <option value="פתיחה">🌅 פתיחה</option>
+    <option value="סגירה">🌙 סגירה</option>
+    <option value="כפולה">⚡ כפולה</option>
+  </select>
 </div>
 
 <div class="form-group">
@@ -252,6 +255,7 @@
       .addEntry({
         date:  dateVal,
         shift: document.getElementById('shift').value,
+        hours: document.getElementById('hours').value,
         owed:  document.getElementById('owed').value,
         cash:  document.getElementById('cash').value,
         check: document.getElementById('check').value,
@@ -262,7 +266,7 @@
   function reset() {
     document.getElementById('date').value  = yyyy + '-' + mm + '-' + dd;
     document.getElementById('shift').value = '';
-    ['owed','cash','check','notes'].forEach(id => document.getElementById(id).value = '');
+    ['hours','owed','cash','check','notes'].forEach(id => document.getElementById(id).value = '');
     calc();
   }
 

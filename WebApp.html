@@ -2,190 +2,281 @@
 <html dir="rtl" lang="he">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#1a237e">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>💰 הכנסות ברמן</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --blue:    #1565c0;
-    --dark:    #1a237e;
-    --light:   #e8eaf6;
-    --green:   #2e7d32;
-    --green-bg:#e8f5e9;
-    --red:     #c62828;
-    --red-bg:  #ffebee;
-    --warn-bg: #fff8e1;
-    --warn:    #e65100;
-    --radius:  12px;
+    --blue:     #1565c0;
+    --dark:     #1a237e;
+    --light:    #e8eaf6;
+    --green:    #2e7d32;
+    --green-bg: #e8f5e9;
+    --red:      #c62828;
+    --red-bg:   #ffebee;
+    --gray-bg:  #f4f6fb;
+    --border:   #dde1f0;
+    --text:     #1a1a2e;
+    --sub:      #6272a4;
+    --radius:   14px;
   }
+
+  html, body { height: 100%; }
 
   body {
-    font-family: 'Segoe UI', Arial, sans-serif;
+    font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
     direction: rtl;
-    background: #eceff1;
-    min-height: 100vh;
-    padding-bottom: 32px;
+    background: var(--gray-bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* ---- HEADER ---- */
+  /* ── HEADER ── */
   .header {
     background: var(--dark);
     color: #fff;
-    padding: 18px 20px 14px;
+    padding: 16px 20px 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
     position: sticky;
     top: 0;
-    z-index: 10;
-    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+    z-index: 50;
   }
-  .header h1 { font-size: 19px; font-weight: 700; }
-  .header .sub { font-size: 13px; opacity: .75; margin-top: 2px; }
+  .header h1 { font-size: 18px; font-weight: 800; letter-spacing: -.3px; }
+  .header .month-badge {
+    background: rgba(255,255,255,.18);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,.9);
+  }
 
-  /* ---- CARDS ---- */
+  /* ── SUMMARY STRIP ── */
+  .summary-strip {
+    background: var(--dark);
+    padding: 0 16px 16px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .strip-item {
+    background: rgba(255,255,255,.12);
+    border-radius: 10px;
+    padding: 9px 10px;
+    text-align: center;
+  }
+  .strip-label { font-size: 10px; color: rgba(255,255,255,.7); font-weight: 600; margin-bottom: 3px; }
+  .strip-value { font-size: 15px; font-weight: 800; color: #fff; }
+  .strip-item.diff-pos { background: rgba(46,125,50,.4); }
+  .strip-item.diff-neg { background: rgba(198,40,40,.4); }
+  .strip-item.diff-pos .strip-value { color: #a5d6a7; }
+  .strip-item.diff-neg .strip-value { color: #ef9a9a; }
+
+  /* ── CARD ── */
   .card {
     background: #fff;
     border-radius: var(--radius);
-    box-shadow: 0 1px 6px rgba(0,0,0,.1);
-    margin: 14px 14px 0;
-    padding: 16px;
+    margin: 12px 12px 0;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
   }
-  .card-title {
-    font-size: 13px; font-weight: 700;
+  .card-head {
+    padding: 14px 16px 0;
+    font-size: 13px;
+    font-weight: 800;
     color: var(--blue);
-    margin-bottom: 12px;
-    display: flex; align-items: center; gap: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
-  /* ---- SUMMARY GRID ---- */
-  .summary-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 9px;
-  }
-  .sum-item {
-    background: var(--light);
-    border-radius: 9px;
-    padding: 10px 12px;
-    text-align: center;
-  }
-  .sum-item.full  { grid-column: 1/-1; }
-  .sum-label { font-size: 11px; color: #5c6bc0; font-weight: 600; margin-bottom: 3px; }
-  .sum-value { font-size: 17px; font-weight: 800; color: var(--dark); }
-  .sum-item.diff-pos { background: var(--green-bg); }
-  .sum-item.diff-pos .sum-label { color: var(--green); }
-  .sum-item.diff-pos .sum-value { color: var(--green); }
-  .sum-item.diff-neg { background: var(--red-bg); }
-  .sum-item.diff-neg .sum-label { color: var(--red); }
-  .sum-item.diff-neg .sum-value { color: var(--red); }
+  /* ── FORM ── */
+  .form-body { padding: 12px 16px 16px; }
 
-  /* ---- FORM ---- */
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 11px; }
-  .form-col  { display: flex; flex-direction: column; }
-  .form-full { margin-bottom: 11px; }
-
-  label { font-size: 12px; font-weight: 700; color: #444; margin-bottom: 4px; }
+  .field { margin-bottom: 10px; }
+  .field label {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--sub);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+  }
 
   input[type="date"],
   input[type="number"],
-  select, textarea {
+  input[type="text"],
+  select {
     width: 100%;
-    padding: 10px 11px;
-    border: 1.5px solid #c5cae9;
-    border-radius: 9px;
+    height: 46px;
+    padding: 0 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
     font-size: 15px;
-    color: #222;
-    background: #fafafa;
+    color: var(--text);
+    background: var(--gray-bg);
     -webkit-appearance: none;
-    transition: border-color .15s;
+    appearance: none;
   }
   input:focus, select:focus {
     outline: none;
     border-color: var(--blue);
     background: #fff;
+    box-shadow: 0 0 0 3px rgba(21,101,192,.1);
   }
 
-  /* live calc card */
-  .calc-card {
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+  /* ── SHIFT BUTTONS ── */
+  .shift-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+  }
+  .shift-btn {
+    height: 44px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: var(--gray-bg);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--sub);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    -webkit-tap-highlight-color: transparent;
+    transition: all .15s;
+  }
+  .shift-btn .icon { font-size: 16px; }
+  .shift-btn .txt  { font-size: 11px; }
+  .shift-btn.active {
+    border-color: var(--blue);
+    background: var(--light);
+    color: var(--blue);
+  }
+
+  /* ── LIVE CALC ── */
+  .calc-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 10px 0;
+  }
+  .calc-box {
     background: var(--light);
     border-radius: 10px;
-    padding: 12px 14px;
-    margin-bottom: 11px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
+    padding: 10px;
+    text-align: center;
   }
-  .calc-item { text-align: center; flex: 1; }
-  .calc-lbl { font-size: 11px; color: #5c6bc0; font-weight: 600; margin-bottom: 3px; }
-  .calc-val { font-size: 16px; font-weight: 800; color: var(--dark); }
+  .calc-lbl { font-size: 10.5px; color: var(--sub); font-weight: 700; margin-bottom: 3px; }
+  .calc-val { font-size: 18px; font-weight: 900; color: var(--dark); }
 
-  .diff-badge {
-    border-radius: 8px; padding: 8px 12px;
-    text-align: center; font-size: 13px; font-weight: 700;
+  .diff-pill {
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    font-size: 13.5px;
+    font-weight: 800;
     margin-bottom: 12px;
   }
-  .diff-pos  { background: var(--green-bg); color: var(--green); }
-  .diff-neg  { background: var(--red-bg);   color: var(--red);   }
-  .diff-zero { background: #e3f2fd;          color: #0d47a1;      }
+  .d-pos  { background: var(--green-bg); color: var(--green); }
+  .d-neg  { background: var(--red-bg);   color: var(--red);   }
+  .d-zero { background: #e3f2fd;          color: #0d47a1;      }
 
-  /* button */
+  /* ── SAVE BUTTON ── */
   .btn-save {
-    width: 100%; padding: 14px;
-    background: var(--blue); color: #fff;
-    border: none; border-radius: 10px;
-    font-size: 16px; font-weight: 700;
-    cursor: pointer; letter-spacing: .3px;
-    transition: background .15s;
+    width: 100%;
+    height: 50px;
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    letter-spacing: .2px;
     -webkit-tap-highlight-color: transparent;
+    transition: background .12s, transform .08s;
   }
-  .btn-save:active { background: var(--dark); }
-  .btn-save:disabled { background: #90a4ae; cursor: default; }
+  .btn-save:active { transform: scale(.97); }
+  .btn-save:disabled { background: #b0bec5; cursor: default; transform: none; }
 
-  /* status toast */
-  #toast {
-    display: none;
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-    padding: 12px 22px; border-radius: 24px;
-    font-size: 14px; font-weight: 700;
-    box-shadow: 0 4px 16px rgba(0,0,0,.2);
-    z-index: 100; white-space: nowrap;
-    transition: opacity .3s;
-  }
-  #toast.ok  { background: var(--green); color: #fff; display: block; }
-  #toast.err { background: var(--red);   color: #fff; display: block; }
-
-  /* ---- RECENT ---- */
+  /* ── RECENT ── */
+  .recent-list { padding: 0 16px 4px; }
   .recent-item {
-    border-bottom: 1px solid #f0f0f0;
-    padding: 9px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--gray-bg);
   }
   .recent-item:last-child { border-bottom: none; }
-  .recent-date  { font-size: 13px; font-weight: 700; color: #333; }
-  .recent-shift { font-size: 11px; color: #888; }
-  .recent-amount{ font-size: 15px; font-weight: 800; }
-  .recent-diff  { font-size: 11px; font-weight: 600; margin-top: 2px; }
+  .ri-left { display: flex; flex-direction: column; gap: 3px; }
+  .ri-date  { font-size: 14px; font-weight: 800; color: var(--text); }
+  .ri-meta  { font-size: 11px; color: var(--sub); }
+  .ri-right { text-align: left; }
+  .ri-total { font-size: 16px; font-weight: 900; color: var(--text); }
+  .ri-diff  { font-size: 11px; font-weight: 700; }
   .pos { color: var(--green); }
   .neg { color: var(--red); }
 
-  /* ---- WARN NOTE ---- */
-  .warn-note {
-    background: var(--warn-bg); color: var(--warn);
-    border-radius: 9px; padding: 10px 13px;
-    font-size: 11.5px; font-style: italic; margin-top: 14px;
-    text-align: center; line-height: 1.5;
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 20px 0;
+    color: var(--sub);
+    font-size: 13px;
   }
 
-  /* loading skeleton */
-  .skel {
-    background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.2s infinite;
-    border-radius: 6px; height: 22px;
+  /* ── WARN NOTE ── */
+  .warn-note {
+    margin: 12px 12px 20px;
+    background: #fff8e1;
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 11.5px;
+    color: #e65100;
+    text-align: center;
+    line-height: 1.6;
+    font-style: italic;
   }
-  @keyframes shimmer { from{background-position:200% 0} to{background-position:-200% 0} }
+
+  /* ── TOAST ── */
+  #toast {
+    position: fixed;
+    bottom: 28px; left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    border-radius: 28px;
+    font-size: 14px; font-weight: 700;
+    box-shadow: 0 4px 20px rgba(0,0,0,.2);
+    white-space: nowrap;
+    z-index: 999;
+    opacity: 0;
+    transition: opacity .25s;
+    pointer-events: none;
+  }
+  #toast.show-ok  { background: var(--green); color: #fff; opacity: 1; }
+  #toast.show-err { background: var(--red);   color: #fff; opacity: 1; }
+
+  /* ── SKELETON ── */
+  .sk {
+    background: linear-gradient(90deg,#e8eaf6 25%,#f5f5f5 50%,#e8eaf6 75%);
+    background-size: 200% 100%;
+    animation: sh 1.2s infinite;
+    border-radius: 6px;
+  }
+  @keyframes sh { from{background-position:200% 0} to{background-position:-200% 0} }
 </style>
 </head>
 <body>
@@ -193,85 +284,96 @@
 <!-- HEADER -->
 <div class="header">
   <h1>💰 הכנסות ברמן</h1>
-  <div class="sub" id="headerMonth">טוען...</div>
+  <span class="month-badge" id="monthBadge">טוען...</span>
 </div>
 
-<!-- SUMMARY -->
-<div class="card">
-  <div class="card-title">📊 סיכום חודשי</div>
-  <div class="summary-grid" id="summaryGrid">
-    <div class="sum-item"><div class="skel"></div></div>
-    <div class="sum-item"><div class="skel"></div></div>
-    <div class="sum-item"><div class="skel"></div></div>
-    <div class="sum-item"><div class="skel"></div></div>
-    <div class="sum-item full"><div class="skel"></div></div>
-  </div>
+<!-- SUMMARY STRIP -->
+<div class="summary-strip" id="summaryStrip">
+  <div class="strip-item"><div class="sk" style="height:14px;margin-bottom:5px"></div><div class="sk" style="height:20px"></div></div>
+  <div class="strip-item"><div class="sk" style="height:14px;margin-bottom:5px"></div><div class="sk" style="height:20px"></div></div>
+  <div class="strip-item"><div class="sk" style="height:14px;margin-bottom:5px"></div><div class="sk" style="height:20px"></div></div>
 </div>
 
-<!-- ADD FORM -->
+<!-- FORM -->
 <div class="card">
-  <div class="card-title">➕ הוסף יום חדש</div>
+  <div class="card-head">➕ הוסף יום</div>
+  <div class="form-body">
 
-  <div class="form-row">
-    <div class="form-col">
-      <label for="date">📅 תאריך</label>
-      <input type="date" id="date">
+    <div class="row-2" style="margin-bottom:10px">
+      <div class="field" style="margin:0">
+        <label>📅 תאריך</label>
+        <input type="date" id="date">
+      </div>
+      <div class="field" style="margin:0">
+        <label>⏱ שעות</label>
+        <input type="number" id="hours" step="0.5" min="1" max="16" placeholder="8.5" inputmode="decimal">
+      </div>
     </div>
-    <div class="form-col">
-      <label for="shift">🎯 משמרת</label>
-      <select id="shift">
-        <option value="">-- בחר --</option>
-        <option value="בוקר">בוקר</option>
-        <option value="צהריים">צהריים</option>
-        <option value="ערב">ערב</option>
-        <option value="לילה">לילה</option>
-        <option value="כפולה">כפולה</option>
-      </select>
+
+    <div class="field">
+      <label>🎯 סוג משמרת</label>
+      <div class="shift-group">
+        <button class="shift-btn" onclick="selectShift('פתיחה', this)">
+          <span class="icon">🌅</span><span class="txt">פתיחה</span>
+        </button>
+        <button class="shift-btn" onclick="selectShift('סגירה', this)">
+          <span class="icon">🌙</span><span class="txt">סגירה</span>
+        </button>
+        <button class="shift-btn" onclick="selectShift('כפולה', this)">
+          <span class="icon">⚡</span><span class="txt">כפולה</span>
+        </button>
+      </div>
+      <input type="hidden" id="shift" value="">
     </div>
+
+    <div class="field">
+      <label>💵 סכום מגיע (₪)</label>
+      <input type="number" id="owed" step="0.01" min="0" placeholder="0.00" inputmode="decimal" oninput="calc()">
+    </div>
+
+    <div class="row-2" style="margin-bottom:0">
+      <div class="field" style="margin-bottom:0">
+        <label>💰 מזומן (₪)</label>
+        <input type="number" id="cash" step="0.01" min="0" placeholder="0.00" inputmode="decimal" oninput="calc()">
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label>🏦 צ'ק (₪)</label>
+        <input type="number" id="check" step="0.01" min="0" placeholder="0.00" inputmode="decimal" oninput="calc()">
+      </div>
+    </div>
+
+    <!-- LIVE CALC -->
+    <div class="calc-row">
+      <div class="calc-box">
+        <div class="calc-lbl">מגיע</div>
+        <div class="calc-val" id="cOwed">₪0</div>
+      </div>
+      <div class="calc-box">
+        <div class="calc-lbl">סה"כ התקבל</div>
+        <div class="calc-val" id="cTotal">₪0</div>
+      </div>
+    </div>
+
+    <div class="diff-pill d-zero" id="diffPill">הפרש: ₪0.00</div>
+
+    <div class="field" style="margin-bottom:12px">
+      <label>📝 הערות</label>
+      <input type="text" id="notes" placeholder="הערה קצרה...">
+    </div>
+
+    <button class="btn-save" id="btnSave" onclick="save()">✅  שמור</button>
+
   </div>
-
-  <div class="form-full">
-    <label for="owed">💵 סכום מגיע (המדויק) ₪</label>
-    <input type="number" id="owed" step="0.01" min="0" placeholder="0.00" inputmode="decimal" oninput="calc()">
-  </div>
-
-  <div class="form-row">
-    <div class="form-col">
-      <label for="cash">💰 מזומן ₪</label>
-      <input type="number" id="cash" step="0.01" min="0" placeholder="0.00" inputmode="decimal" oninput="calc()">
-    </div>
-    <div class="form-col">
-      <label for="check">🏦 צ'ק ₪</label>
-      <input type="number" id="check" step="0.01" min="0" placeholder="0.00" inputmode="decimal" oninput="calc()">
-    </div>
-  </div>
-
-  <!-- Live calc -->
-  <div class="calc-card">
-    <div class="calc-item">
-      <div class="calc-lbl">מגיע</div>
-      <div class="calc-val" id="cOwed">₪0</div>
-    </div>
-    <div class="calc-item">
-      <div class="calc-lbl">סה"כ התקבל</div>
-      <div class="calc-val" id="cTotal">₪0</div>
-    </div>
-  </div>
-
-  <div class="diff-badge diff-zero" id="diffBadge">הפרש: ₪0.00</div>
-
-  <div class="form-full">
-    <label for="notes">📝 הערות (רשות)</label>
-    <input type="text" id="notes" placeholder="הערה קצרה...">
-  </div>
-
-  <button class="btn-save" id="btnSave" onclick="save()">✅  שמור</button>
 </div>
 
 <!-- RECENT ENTRIES -->
-<div class="card" id="recentCard">
-  <div class="card-title">🕐 הזנות אחרונות</div>
-  <div id="recentList"><div class="skel" style="margin-bottom:8px"></div><div class="skel" style="margin-bottom:8px"></div><div class="skel"></div></div>
+<div class="card" style="margin-bottom:0">
+  <div class="card-head">🕐 הזנות אחרונות</div>
+  <div class="recent-list" id="recentList">
+    <div class="recent-item"><div class="sk" style="height:36px;width:100%"></div></div>
+    <div class="recent-item"><div class="sk" style="height:36px;width:100%"></div></div>
+    <div class="recent-item"><div class="sk" style="height:36px;width:100%"></div></div>
+  </div>
 </div>
 
 <div class="warn-note">
@@ -281,13 +383,24 @@
 <div id="toast"></div>
 
 <script>
-  // תאריך ברירת מחדל = היום
-  const t = new Date();
+  // תאריך היום
+  const td = new Date();
   document.getElementById('date').value =
-    t.getFullYear() + '-' + String(t.getMonth()+1).padStart(2,'0') + '-' + String(t.getDate()).padStart(2,'0');
+    td.getFullYear() + '-' +
+    String(td.getMonth()+1).padStart(2,'0') + '-' +
+    String(td.getDate()).padStart(2,'0');
 
-  function ils(n) { return '₪' + (Math.abs(n)).toLocaleString('he-IL', {minimumFractionDigits:0, maximumFractionDigits:0}); }
-  function ils2(n){ return '₪' + n.toFixed(2); }
+  let selectedShift = '';
+
+  function selectShift(val, btn) {
+    selectedShift = val;
+    document.getElementById('shift').value = val;
+    document.querySelectorAll('.shift-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function ils(n)  { return '₪' + Math.round(Math.abs(n)).toLocaleString('he-IL'); }
+  function ils2(n) { return '₪' + Math.abs(n).toFixed(2); }
 
   function calc() {
     const owed  = parseFloat(document.getElementById('owed').value)  || 0;
@@ -299,34 +412,30 @@
     document.getElementById('cOwed').textContent  = ils(owed);
     document.getElementById('cTotal').textContent = ils(total);
 
-    const badge = document.getElementById('diffBadge');
-    badge.className = 'diff-badge';
+    const pill = document.getElementById('diffPill');
+    pill.className = 'diff-pill';
     if (diff > 0.005) {
-      badge.classList.add('diff-pos');
-      badge.textContent = 'הפרש: +' + ils2(diff) + '  ✓ קיבלת יותר';
+      pill.classList.add('d-pos');
+      pill.textContent = 'הפרש: +' + ils2(diff) + '  ✓ קיבלת יותר';
     } else if (diff < -0.005) {
-      badge.classList.add('diff-neg');
-      badge.textContent = 'הפרש: -' + ils2(Math.abs(diff)) + '  ⚠️ עוד חסר';
+      pill.classList.add('d-neg');
+      pill.textContent = 'הפרש: -' + ils2(Math.abs(diff)) + '  ⚠️ עוד חסר';
     } else {
-      badge.classList.add('diff-zero');
-      badge.textContent = 'הפרש: ₪0.00  ✓ מדויק';
+      pill.classList.add('d-zero');
+      pill.textContent = 'הפרש: ₪0.00  ✓ מדויק';
     }
   }
 
   function save() {
-    if (!document.getElementById('date').value) { toast('נא להזין תאריך','err'); return; }
+    if (!document.getElementById('date').value) { toast('נא להזין תאריך', 'err'); return; }
     const btn = document.getElementById('btnSave');
     btn.disabled = true; btn.textContent = '⏳ שומר...';
 
     google.script.run
       .withSuccessHandler(res => {
         btn.disabled = false; btn.textContent = '✅  שמור';
-        if (res.success) {
-          toast(res.message, 'ok');
-          clearForm();
-          loadSummary();
-          loadRecent();
-        } else { toast(res.message, 'err'); }
+        toast(res.message, res.success ? 'ok' : 'err');
+        if (res.success) { clearForm(); loadSummary(); loadRecent(); }
       })
       .withFailureHandler(e => {
         btn.disabled = false; btn.textContent = '✅  שמור';
@@ -335,6 +444,7 @@
       .addEntry({
         date:  document.getElementById('date').value,
         shift: document.getElementById('shift').value,
+        hours: document.getElementById('hours').value,
         owed:  document.getElementById('owed').value,
         cash:  document.getElementById('cash').value,
         check: document.getElementById('check').value,
@@ -343,51 +453,43 @@
   }
 
   function clearForm() {
-    const t2 = new Date();
+    const td2 = new Date();
     document.getElementById('date').value =
-      t2.getFullYear() + '-' + String(t2.getMonth()+1).padStart(2,'0') + '-' + String(t2.getDate()).padStart(2,'0');
-    ['shift','owed','cash','check','notes'].forEach(id => document.getElementById(id).value = '');
+      td2.getFullYear() + '-' + String(td2.getMonth()+1).padStart(2,'0') + '-' + String(td2.getDate()).padStart(2,'0');
+    ['hours','owed','cash','check','notes'].forEach(id => document.getElementById(id).value = '');
+    selectedShift = '';
+    document.getElementById('shift').value = '';
+    document.querySelectorAll('.shift-btn').forEach(b => b.classList.remove('active'));
     calc();
   }
 
   function toast(msg, type) {
     const el = document.getElementById('toast');
-    el.textContent = msg; el.className = type;
+    el.textContent = msg;
+    el.className = 'show-' + type;
     clearTimeout(el._t);
-    el._t = setTimeout(() => { el.className = ''; el.style.display = 'none'; }, 3000);
+    el._t = setTimeout(() => { el.className = ''; }, 2800);
   }
 
   function loadSummary() {
     google.script.run
       .withSuccessHandler(s => {
-        document.getElementById('headerMonth').textContent = s.month;
+        document.getElementById('monthBadge').textContent = s.month;
         const diff = s.diff;
         const diffCls = diff >= 0 ? 'diff-pos' : 'diff-neg';
-        const diffSign = diff >= 0 ? '+' : '-';
-        document.getElementById('summaryGrid').innerHTML = `
-          <div class="sum-item">
-            <div class="sum-label">ימי עבודה</div>
-            <div class="sum-value">${s.days}</div>
+        const diffSign = diff >= 0 ? '+' : '';
+        document.getElementById('summaryStrip').innerHTML = `
+          <div class="strip-item">
+            <div class="strip-label">ימי עבודה</div>
+            <div class="strip-value">${s.days} ימים</div>
           </div>
-          <div class="sum-item">
-            <div class="sum-label">סכום מגיע</div>
-            <div class="sum-value">${ils(s.owed)}</div>
+          <div class="strip-item">
+            <div class="strip-label">סה"כ מגיע</div>
+            <div class="strip-value">${ils(s.owed)}</div>
           </div>
-          <div class="sum-item">
-            <div class="sum-label">מזומן</div>
-            <div class="sum-value">${ils(s.cash)}</div>
-          </div>
-          <div class="sum-item">
-            <div class="sum-label">צ'קים</div>
-            <div class="sum-value">${ils(s.check)}</div>
-          </div>
-          <div class="sum-item full">
-            <div class="sum-label">סה"כ התקבל</div>
-            <div class="sum-value">${ils(s.received)}</div>
-          </div>
-          <div class="sum-item full ${diffCls}">
-            <div class="sum-label">הפרש כולל</div>
-            <div class="sum-value">${diffSign}${ils(Math.abs(diff))}</div>
+          <div class="strip-item ${diffCls}">
+            <div class="strip-label">הפרש</div>
+            <div class="strip-value">${diffSign}${ils(diff)}</div>
           </div>
         `;
       })
@@ -398,19 +500,23 @@
     google.script.run
       .withSuccessHandler(entries => {
         const el = document.getElementById('recentList');
-        if (!entries.length) { el.innerHTML = '<div style="color:#999;font-size:13px;text-align:center;padding:8px 0">אין הזנות עדיין החודש</div>'; return; }
+        if (!entries || !entries.length) {
+          el.innerHTML = '<div class="empty-state">אין הזנות עדיין החודש</div>';
+          return;
+        }
         el.innerHTML = entries.map(e => {
           const diff = parseFloat(e.diff) || 0;
           const cls  = diff >= 0 ? 'pos' : 'neg';
           const sign = diff >= 0 ? '+' : '-';
+          const meta = [e.day, e.shift, e.hours ? e.hours + ' שע\'' : ''].filter(Boolean).join(' · ');
           return `<div class="recent-item">
-            <div>
-              <div class="recent-date">${e.date}  <span style="font-weight:400;color:#888;font-size:12px">${e.day}${e.shift ? ' · ' + e.shift : ''}</span></div>
-              <div class="recent-diff ${cls}">${sign}${ils2(Math.abs(diff))} הפרש</div>
+            <div class="ri-left">
+              <div class="ri-date">${e.date}</div>
+              <div class="ri-meta">${meta}</div>
             </div>
-            <div style="text-align:left">
-              <div class="recent-amount">${ils(e.received)}</div>
-              <div style="font-size:11px;color:#888">מגיע: ${ils(e.owed)}</div>
+            <div class="ri-right">
+              <div class="ri-total">${ils(e.received)}</div>
+              <div class="ri-diff ${cls}">${sign}${ils2(Math.abs(diff))} הפרש</div>
             </div>
           </div>`;
         }).join('');
@@ -418,7 +524,6 @@
       .getRecentEntries();
   }
 
-  // טעינה ראשונית
   loadSummary();
   loadRecent();
 </script>

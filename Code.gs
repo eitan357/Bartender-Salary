@@ -9,9 +9,9 @@ const MONTHS_HE = [
 const DAYS_HE = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
 
 // עמודות (1-based)
-const COL = { DATE:1, DAY:2, SHIFT:3, OWED:4, CASH:5, CHECK:6, TOTAL:7, DIFF:8, NOTES:9 };
-const NUM_COLS = 9;
-const HEADERS = ['תאריך','יום','משמרת','סכום מגיע','מזומן',"צ'ק",'סה"כ התקבל','הפרש','הערות'];
+const COL = { DATE:1, DAY:2, SHIFT:3, HOURS:4, OWED:5, CASH:6, CHECK:7, TOTAL:8, DIFF:9, NOTES:10 };
+const NUM_COLS = 10;
+const HEADERS = ['תאריך','יום','משמרת','שעות','סכום מגיע','מזומן',"צ'ק",'סה"כ התקבל','הפרש','הערות'];
 
 const DATA_START_ROW = 3;   // שורה 1 = כותרת, שורה 2 = headers, משורה 3 = נתונים
 const DATA_MAX_ROWS   = 33; // מקסימום 33 שורות נתונים (מספיק לכל חודש + זליגות)
@@ -83,6 +83,7 @@ function getRecentEntries() {
       date:     r[COL.DATE -1],
       day:      r[COL.DAY  -1],
       shift:    r[COL.SHIFT-1],
+      hours:    r[COL.HOURS-1],
       owed:     r[COL.OWED -1],
       cash:     r[COL.CASH -1],
       check:    r[COL.CHECK-1],
@@ -158,15 +159,16 @@ function initMonthSheet(sheet, year, month) {
   sheet.setRowHeight(2, 38);
 
   // רוחב עמודות
-  sheet.setColumnWidth(COL.DATE,  105);
-  sheet.setColumnWidth(COL.DAY,    78);
-  sheet.setColumnWidth(COL.SHIFT, 108);
-  sheet.setColumnWidth(COL.OWED,  108);
-  sheet.setColumnWidth(COL.CASH,   95);
-  sheet.setColumnWidth(COL.CHECK,  95);
-  sheet.setColumnWidth(COL.TOTAL, 118);
-  sheet.setColumnWidth(COL.DIFF,   95);
-  sheet.setColumnWidth(COL.NOTES, 165);
+  sheet.setColumnWidth(COL.DATE,   105);
+  sheet.setColumnWidth(COL.DAY,     78);
+  sheet.setColumnWidth(COL.SHIFT,  108);
+  sheet.setColumnWidth(COL.HOURS,   70);
+  sheet.setColumnWidth(COL.OWED,   108);
+  sheet.setColumnWidth(COL.CASH,    95);
+  sheet.setColumnWidth(COL.CHECK,   95);
+  sheet.setColumnWidth(COL.TOTAL,  118);
+  sheet.setColumnWidth(COL.DIFF,    95);
+  sheet.setColumnWidth(COL.NOTES,  165);
 
   sheet.setFrozenRows(2);
 
@@ -197,6 +199,7 @@ function addEntry(data) {
 
   const sheet = getOrCreateMonthSheet(year, month);
 
+  const hours    = parseFloat(data.hours) || '';
   const owed     = parseFloat(data.owed)  || 0;
   const cash     = parseFloat(data.cash)  || 0;
   const chk      = parseFloat(data.check) || 0;
@@ -212,7 +215,7 @@ function addEntry(data) {
   }
 
   sheet.getRange(targetRow, 1, 1, NUM_COLS).setValues([[
-    formattedDate, dayName, data.shift || '',
+    formattedDate, dayName, data.shift || '', hours,
     owed, cash, chk, total, diff, data.notes || ''
   ]]);
 
@@ -248,6 +251,10 @@ function applyRowFormat(sheet, row, diff) {
   [COL.OWED, COL.CASH, COL.CHECK, COL.TOTAL, COL.DIFF].forEach(col => {
     sheet.getRange(row, col).setNumberFormat('₪#,##0.00');
   });
+  // עמודת שעות
+  if (sheet.getRange(row, COL.HOURS).getValue() !== '') {
+    sheet.getRange(row, COL.HOURS).setNumberFormat('0.0');
+  }
 
   // צבע עמודת הפרש
   const diffCell = sheet.getRange(row, COL.DIFF);
