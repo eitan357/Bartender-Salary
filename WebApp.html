@@ -4,7 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#1a237e">
-<title>הכנסות ברמן</title>
+<!-- iOS: פתיחה ללא שורת URL -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ברמן 💰">
+<!-- Android -->
+<meta name="mobile-web-app-capable" content="yes">
+<title>ברמן 💰</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
@@ -503,6 +509,44 @@ input:focus {
 
   loadSummary();
   loadRecent();
+
+  // יצירת אייקון דינמי למסך הבית (iOS + Android)
+  (function() {
+    var c = document.createElement('canvas');
+    c.width = c.height = 192;
+    var ctx = c.getContext('2d');
+
+    // עיגול רקע כחול
+    ctx.fillStyle = '#1a237e';
+    if (ctx.roundRect) {
+      ctx.beginPath(); ctx.roundRect(0, 0, 192, 192, 40); ctx.fill();
+    } else {
+      ctx.fillRect(0, 0, 192, 192);
+    }
+
+    // סמל שקל
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 110px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('₪', 96, 106);
+
+    var dataUrl = c.toDataURL('image/png');
+
+    // apple-touch-icon (iOS)
+    var appleIcon = document.createElement('link');
+    appleIcon.rel  = 'apple-touch-icon';
+    appleIcon.sizes = '192x192';
+    appleIcon.href = dataUrl;
+    document.head.appendChild(appleIcon);
+
+    // shortcut icon (Android / Browser)
+    var favicon = document.createElement('link');
+    favicon.rel  = 'icon';
+    favicon.type = 'image/png';
+    favicon.href = dataUrl;
+    document.head.appendChild(favicon);
+  })();
 </script>
 </body>
 </html>
