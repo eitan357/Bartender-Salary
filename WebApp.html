@@ -2,382 +2,388 @@
 <html dir="rtl" lang="he">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#1a237e">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>💰 הכנסות ברמן</title>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>הכנסות ברמן</title>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-  :root {
-    --blue:     #1565c0;
-    --dark:     #1a237e;
-    --light:    #e8eaf6;
-    --green:    #2e7d32;
-    --green-bg: #e8f5e9;
-    --red:      #c62828;
-    --red-bg:   #ffebee;
-    --gray-bg:  #f4f6fb;
-    --border:   #dde1f0;
-    --text:     #1a1a2e;
-    --sub:      #6272a4;
-    --radius:   14px;
-  }
+:root {
+  --blue:    #1565c0;
+  --dark:    #1a237e;
+  --green:   #1b5e20;
+  --green-l: #e8f5e9;
+  --red:     #b71c1c;
+  --red-l:   #ffebee;
+  --gray:    #f0f2f8;
+  --border:  #dde1f0;
+  --text:    #111827;
+  --muted:   #6b7280;
+  --r:       16px;
+}
 
-  html, body { height: 100%; }
+html { font-size: 16px; }
 
-  body {
-    font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
-    direction: rtl;
-    background: var(--gray-bg);
-    color: var(--text);
-    -webkit-font-smoothing: antialiased;
-  }
+body {
+  font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
+  direction: rtl;
+  background: var(--gray);
+  color: var(--text);
+  min-height: 100svh;
+  padding-bottom: 100px; /* מקום לכפתור קבוע */
+  -webkit-font-smoothing: antialiased;
+}
 
-  /* ── HEADER ── */
-  .header {
-    background: var(--dark);
-    color: #fff;
-    padding: 16px 20px 13px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    position: sticky;
-    top: 0;
-    z-index: 50;
-  }
-  .header h1 { font-size: 18px; font-weight: 800; letter-spacing: -.3px; }
-  .header .month-badge {
-    background: rgba(255,255,255,.18);
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: 12px;
-    font-weight: 600;
-    color: rgba(255,255,255,.9);
-  }
+/* ─── HEADER ─── */
+.top-bar {
+  background: var(--dark);
+  padding: 18px 20px 12px;
+  padding-top: calc(18px + env(safe-area-inset-top));
+}
+.top-bar h1 { font-size: 22px; font-weight: 800; color: #fff; }
 
-  /* ── SUMMARY STRIP ── */
-  .summary-strip {
-    background: var(--dark);
-    padding: 0 16px 16px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-  }
-  .strip-item {
-    background: rgba(255,255,255,.12);
-    border-radius: 10px;
-    padding: 9px 10px;
-    text-align: center;
-  }
-  .strip-label { font-size: 10px; color: rgba(255,255,255,.7); font-weight: 600; margin-bottom: 3px; }
-  .strip-value { font-size: 15px; font-weight: 800; color: #fff; }
-  .strip-item.diff-pos { background: rgba(46,125,50,.4); }
-  .strip-item.diff-neg { background: rgba(198,40,40,.4); }
-  .strip-item.diff-pos .strip-value { color: #a5d6a7; }
-  .strip-item.diff-neg .strip-value { color: #ef9a9a; }
+/* ─── SUMMARY ROW ─── */
+.summary-row {
+  background: var(--dark);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 0 16px 16px;
+}
+.s-box {
+  background: rgba(255,255,255,.13);
+  border-radius: 12px;
+  padding: 10px 8px;
+  text-align: center;
+}
+.s-lbl { font-size: 11px; color: rgba(255,255,255,.65); font-weight: 600; margin-bottom: 4px; }
+.s-val { font-size: 17px; font-weight: 900; color: #fff; }
+.s-box.pos { background: rgba(27,94,32,.5); }
+.s-box.pos .s-val { color: #a5d6a7; }
+.s-box.neg { background: rgba(183,28,28,.5); }
+.s-box.neg .s-val { color: #ef9a9a; }
 
-  /* ── CARD ── */
-  .card {
-    background: #fff;
-    border-radius: var(--radius);
-    margin: 12px 12px 0;
-    overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0,0,0,.08);
-  }
-  .card-head {
-    padding: 14px 16px 0;
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--blue);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+/* ─── SECTION CARD ─── */
+.sec {
+  background: #fff;
+  border-radius: var(--r);
+  margin: 14px 12px 0;
+  overflow: hidden;
+}
+.sec-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--blue);
+  padding: 16px 18px 0;
+  letter-spacing: .2px;
+}
 
-  /* ── FORM ── */
-  .form-body { padding: 12px 16px 16px; }
+/* ─── FORM ─── */
+.form-pad { padding: 14px 18px 18px; }
 
-  .field { margin-bottom: 10px; }
-  .field label {
-    display: block;
-    font-size: 11.5px;
-    font-weight: 700;
-    color: var(--sub);
-    margin-bottom: 5px;
-    text-transform: uppercase;
-    letter-spacing: .4px;
-  }
+.frow { display: grid; gap: 12px; margin-bottom: 12px; }
+.frow-2 { grid-template-columns: 1fr 1fr; }
+.frow-3 { grid-template-columns: 1fr 1fr 1fr; }
 
-  input[type="date"],
-  input[type="number"],
-  input[type="text"],
-  select {
-    width: 100%;
-    height: 46px;
-    padding: 0 12px;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    font-size: 15px;
-    color: var(--text);
-    background: var(--gray-bg);
-    -webkit-appearance: none;
-    appearance: none;
-  }
-  input:focus, select:focus {
-    outline: none;
-    border-color: var(--blue);
-    background: #fff;
-    box-shadow: 0 0 0 3px rgba(21,101,192,.1);
-  }
+.frow:last-child { margin-bottom: 0; }
 
-  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.fld { display: flex; flex-direction: column; gap: 6px; }
+.fld label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
 
-  /* ── SHIFT BUTTONS ── */
-  .shift-group {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 7px;
-  }
-  .shift-btn {
-    height: 44px;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    background: var(--gray-bg);
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--sub);
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1px;
-    -webkit-tap-highlight-color: transparent;
-    transition: all .15s;
-  }
-  .shift-btn .icon { font-size: 16px; }
-  .shift-btn .txt  { font-size: 11px; }
-  .shift-btn.active {
-    border-color: var(--blue);
-    background: var(--light);
-    color: var(--blue);
-  }
+/* ─── INPUTS ─── */
+input[type="date"],
+input[type="number"],
+input[type="text"] {
+  width: 100%;
+  height: 52px;
+  padding: 0 14px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--gray);
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border .15s, box-shadow .15s;
+}
+input:focus {
+  outline: none;
+  border-color: var(--blue);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(21,101,192,.12);
+}
 
-  /* ── LIVE CALC ── */
-  .calc-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin: 10px 0;
-  }
-  .calc-box {
-    background: var(--light);
-    border-radius: 10px;
-    padding: 10px;
-    text-align: center;
-  }
-  .calc-lbl { font-size: 10.5px; color: var(--sub); font-weight: 700; margin-bottom: 3px; }
-  .calc-val { font-size: 18px; font-weight: 900; color: var(--dark); }
+/* ─── SHIFT BUTTONS ─── */
+.shift-pills {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.pill {
+  height: 56px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  background: var(--gray);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  cursor: pointer;
+  transition: all .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.pill:active { transform: scale(.95); }
+.pill .pi  { font-size: 20px; }
+.pill .pt  { font-size: 13px; font-weight: 700; color: var(--muted); }
+.pill.on   {
+  border-color: var(--blue);
+  background: #e8eaf6;
+}
+.pill.on .pt { color: var(--blue); }
 
-  .diff-pill {
-    border-radius: 10px;
-    padding: 10px;
-    text-align: center;
-    font-size: 13.5px;
-    font-weight: 800;
-    margin-bottom: 12px;
-  }
-  .d-pos  { background: var(--green-bg); color: var(--green); }
-  .d-neg  { background: var(--red-bg);   color: var(--red);   }
-  .d-zero { background: #e3f2fd;          color: #0d47a1;      }
+/* ─── LIVE CALC ─── */
+.calc-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 12px 0 8px;
+}
+.c-box {
+  background: #e8eaf6;
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+}
+.c-lbl { font-size: 11px; color: var(--muted); font-weight: 700; margin-bottom: 4px; }
+.c-val { font-size: 20px; font-weight: 900; color: var(--dark); }
 
-  /* ── SAVE BUTTON ── */
-  .btn-save {
-    width: 100%;
-    height: 50px;
-    background: var(--blue);
-    color: #fff;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 800;
-    cursor: pointer;
-    letter-spacing: .2px;
-    -webkit-tap-highlight-color: transparent;
-    transition: background .12s, transform .08s;
-  }
-  .btn-save:active { transform: scale(.97); }
-  .btn-save:disabled { background: #b0bec5; cursor: default; transform: none; }
+.diff-tag {
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+.dt-pos  { background: var(--green-l); color: var(--green); }
+.dt-neg  { background: var(--red-l);   color: var(--red);   }
+.dt-zero { background: #e3f2fd;        color: #0d47a1;      }
 
-  /* ── RECENT ── */
-  .recent-list { padding: 0 16px 4px; }
-  .recent-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 11px 0;
-    border-bottom: 1px solid var(--gray-bg);
-  }
-  .recent-item:last-child { border-bottom: none; }
-  .ri-left { display: flex; flex-direction: column; gap: 3px; }
-  .ri-date  { font-size: 14px; font-weight: 800; color: var(--text); }
-  .ri-meta  { font-size: 11px; color: var(--sub); }
-  .ri-right { text-align: left; }
-  .ri-total { font-size: 16px; font-weight: 900; color: var(--text); }
-  .ri-diff  { font-size: 11px; font-weight: 700; }
-  .pos { color: var(--green); }
-  .neg { color: var(--red); }
+/* ─── STICKY SAVE ─── */
+.save-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  padding: 12px 16px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  background: rgba(255,255,255,.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid var(--border);
+  z-index: 100;
+}
+.btn-save {
+  width: 100%;
+  height: 54px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-size: 18px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background .12s, transform .08s;
+}
+.btn-save:active { transform: scale(.97); background: var(--dark); }
+.btn-save:disabled { background: #b0bec5; transform: none; }
 
-  /* ── EMPTY STATE ── */
-  .empty-state {
-    text-align: center;
-    padding: 20px 0;
-    color: var(--sub);
-    font-size: 13px;
-  }
+/* ─── RECENT ─── */
+.recent-pad { padding: 8px 18px 16px; }
+.r-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--gray);
+}
+.r-item:last-child { border-bottom: none; }
+.r-date  { font-size: 16px; font-weight: 800; }
+.r-meta  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.r-amt   { font-size: 18px; font-weight: 900; text-align: left; }
+.r-diff  { font-size: 12px; font-weight: 700; text-align: left; margin-top: 2px; }
+.pos { color: var(--green); }
+.neg { color: var(--red);   }
 
-  /* ── WARN NOTE ── */
-  .warn-note {
-    margin: 12px 12px 20px;
-    background: #fff8e1;
-    border-radius: 10px;
-    padding: 11px 14px;
-    font-size: 11.5px;
-    color: #e65100;
-    text-align: center;
-    line-height: 1.6;
-    font-style: italic;
-  }
+.empty { text-align: center; color: var(--muted); padding: 20px 0; font-size: 14px; }
 
-  /* ── TOAST ── */
-  #toast {
-    position: fixed;
-    bottom: 28px; left: 50%;
-    transform: translateX(-50%);
-    padding: 12px 24px;
-    border-radius: 28px;
-    font-size: 14px; font-weight: 700;
-    box-shadow: 0 4px 20px rgba(0,0,0,.2);
-    white-space: nowrap;
-    z-index: 999;
-    opacity: 0;
-    transition: opacity .25s;
-    pointer-events: none;
-  }
-  #toast.show-ok  { background: var(--green); color: #fff; opacity: 1; }
-  #toast.show-err { background: var(--red);   color: #fff; opacity: 1; }
+/* ─── WARN ─── */
+.warn {
+  margin: 14px 12px 0;
+  background: #fff8e1;
+  border-radius: 14px;
+  padding: 13px 16px;
+  font-size: 12px;
+  color: #e65100;
+  text-align: center;
+  line-height: 1.6;
+  font-style: italic;
+}
 
-  /* ── SKELETON ── */
-  .sk {
-    background: linear-gradient(90deg,#e8eaf6 25%,#f5f5f5 50%,#e8eaf6 75%);
-    background-size: 200% 100%;
-    animation: sh 1.2s infinite;
-    border-radius: 6px;
-  }
-  @keyframes sh { from{background-position:200% 0} to{background-position:-200% 0} }
+/* ─── TOAST ─── */
+#toast {
+  position: fixed;
+  top: 24px; left: 50%;
+  transform: translateX(-50%) translateY(-80px);
+  padding: 13px 26px;
+  border-radius: 30px;
+  font-size: 15px; font-weight: 700;
+  white-space: nowrap;
+  z-index: 999;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+  box-shadow: 0 4px 24px rgba(0,0,0,.2);
+}
+#toast.in { transform: translateX(-50%) translateY(0); }
+#toast.ok  { background: var(--green); color: #fff; }
+#toast.err { background: var(--red);   color: #fff; }
+
+/* ─── SKELETON ─── */
+.sk {
+  display: block;
+  border-radius: 8px;
+  background: linear-gradient(90deg,rgba(255,255,255,.15) 25%,rgba(255,255,255,.3) 50%,rgba(255,255,255,.15) 75%);
+  background-size: 200% 100%;
+  animation: sh 1.2s infinite;
+}
+.sk-light {
+  border-radius: 8px;
+  background: linear-gradient(90deg,#e8eaf6 25%,#f0f0f5 50%,#e8eaf6 75%);
+  background-size: 200% 100%;
+  animation: sh 1.2s infinite;
+}
+@keyframes sh { from{background-position:200% 0} to{background-position:-200% 0} }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<div class="header">
+<!-- TOP BAR -->
+<div class="top-bar">
   <h1>💰 הכנסות ברמן</h1>
-  <span class="month-badge" id="monthBadge">טוען...</span>
 </div>
 
-<!-- SUMMARY STRIP -->
-<div class="summary-strip" id="summaryStrip">
-  <div class="strip-item"><div class="sk" style="height:14px;margin-bottom:5px"></div><div class="sk" style="height:20px"></div></div>
-  <div class="strip-item"><div class="sk" style="height:14px;margin-bottom:5px"></div><div class="sk" style="height:20px"></div></div>
-  <div class="strip-item"><div class="sk" style="height:14px;margin-bottom:5px"></div><div class="sk" style="height:20px"></div></div>
+<!-- SUMMARY ROW -->
+<div class="summary-row" id="summaryRow">
+  <div class="s-box"><span class="sk" style="height:12px;width:60%;display:block;margin:0 auto 6px"></span><span class="sk" style="height:20px;width:80%;display:block;margin:0 auto"></span></div>
+  <div class="s-box"><span class="sk" style="height:12px;width:60%;display:block;margin:0 auto 6px"></span><span class="sk" style="height:20px;width:80%;display:block;margin:0 auto"></span></div>
+  <div class="s-box"><span class="sk" style="height:12px;width:60%;display:block;margin:0 auto 6px"></span><span class="sk" style="height:20px;width:80%;display:block;margin:0 auto"></span></div>
 </div>
 
-<!-- FORM -->
-<div class="card">
-  <div class="card-head">➕ הוסף יום</div>
-  <div class="form-body">
+<!-- FORM CARD -->
+<div class="sec">
+  <div class="sec-title">➕  הוסף יום</div>
+  <div class="form-pad">
 
-    <div class="row-2" style="margin-bottom:10px">
-      <div class="field" style="margin:0">
+    <!-- תאריך + שעות -->
+    <div class="frow frow-2">
+      <div class="fld">
         <label>📅 תאריך</label>
         <input type="date" id="date">
       </div>
-      <div class="field" style="margin:0">
+      <div class="fld">
         <label>⏱ שעות</label>
-        <input type="number" id="hours" step="0.5" min="1" max="16" placeholder="8.5" inputmode="decimal">
+        <input type="number" id="hours" step="0.5" min="1" max="16" placeholder="8" inputmode="decimal">
       </div>
     </div>
 
-    <div class="field">
-      <label>🎯 סוג משמרת</label>
-      <div class="shift-group">
-        <button class="shift-btn" onclick="selectShift('פתיחה', this)">
-          <span class="icon">🌅</span><span class="txt">פתיחה</span>
-        </button>
-        <button class="shift-btn" onclick="selectShift('סגירה', this)">
-          <span class="icon">🌙</span><span class="txt">סגירה</span>
-        </button>
-        <button class="shift-btn" onclick="selectShift('כפולה', this)">
-          <span class="icon">⚡</span><span class="txt">כפולה</span>
-        </button>
+    <!-- סוג משמרת -->
+    <div class="frow" style="margin-bottom:12px">
+      <div class="fld">
+        <label>🎯 משמרת</label>
+        <div class="shift-pills">
+          <button class="pill" onclick="pick(this,'פתיחה')">
+            <span class="pi">🌅</span><span class="pt">פתיחה</span>
+          </button>
+          <button class="pill" onclick="pick(this,'סגירה')">
+            <span class="pi">🌙</span><span class="pt">סגירה</span>
+          </button>
+          <button class="pill" onclick="pick(this,'כפולה')">
+            <span class="pi">⚡</span><span class="pt">כפולה</span>
+          </button>
+        </div>
       </div>
-      <input type="hidden" id="shift" value="">
     </div>
 
-    <div class="field">
-      <label>💵 סכום מגיע (₪)</label>
-      <input type="number" id="owed" step="0.01" min="0" placeholder="0.00" inputmode="decimal" oninput="calc()">
+    <!-- סכום מגיע -->
+    <div class="frow">
+      <div class="fld">
+        <label>💵 סכום מגיע (₪)</label>
+        <input type="number" id="owed" step="0.01" min="0" placeholder="0" inputmode="decimal" oninput="calc()">
+      </div>
     </div>
 
-    <div class="row-2" style="margin-bottom:0">
-      <div class="field" style="margin-bottom:0">
+    <!-- מזומן + צ'ק -->
+    <div class="frow frow-2">
+      <div class="fld">
         <label>💰 מזומן (₪)</label>
-        <input type="number" id="cash" step="0.01" min="0" placeholder="0.00" inputmode="decimal" oninput="calc()">
+        <input type="number" id="cash" step="0.01" min="0" placeholder="0" inputmode="decimal" oninput="calc()">
       </div>
-      <div class="field" style="margin-bottom:0">
+      <div class="fld">
         <label>🏦 צ'ק (₪)</label>
-        <input type="number" id="check" step="0.01" min="0" placeholder="0.00" inputmode="decimal" oninput="calc()">
+        <input type="number" id="check" step="0.01" min="0" placeholder="0" inputmode="decimal" oninput="calc()">
       </div>
     </div>
 
-    <!-- LIVE CALC -->
-    <div class="calc-row">
-      <div class="calc-box">
-        <div class="calc-lbl">מגיע</div>
-        <div class="calc-val" id="cOwed">₪0</div>
+    <!-- תצוגה חיה -->
+    <div class="calc-strip">
+      <div class="c-box">
+        <div class="c-lbl">מגיע</div>
+        <div class="c-val" id="cOwed">₪0</div>
       </div>
-      <div class="calc-box">
-        <div class="calc-lbl">סה"כ התקבל</div>
-        <div class="calc-val" id="cTotal">₪0</div>
+      <div class="c-box">
+        <div class="c-lbl">סה"כ התקבל</div>
+        <div class="c-val" id="cTotal">₪0</div>
       </div>
     </div>
 
-    <div class="diff-pill d-zero" id="diffPill">הפרש: ₪0.00</div>
+    <div class="diff-tag dt-zero" id="diffTag">הפרש: ₪0.00</div>
 
-    <div class="field" style="margin-bottom:12px">
-      <label>📝 הערות</label>
-      <input type="text" id="notes" placeholder="הערה קצרה...">
+    <!-- הערות -->
+    <div class="frow">
+      <div class="fld">
+        <label>📝 הערות</label>
+        <input type="text" id="notes" placeholder="הערה קצרה (רשות)">
+      </div>
     </div>
-
-    <button class="btn-save" id="btnSave" onclick="save()">✅  שמור</button>
 
   </div>
 </div>
 
-<!-- RECENT ENTRIES -->
-<div class="card" style="margin-bottom:0">
-  <div class="card-head">🕐 הזנות אחרונות</div>
-  <div class="recent-list" id="recentList">
-    <div class="recent-item"><div class="sk" style="height:36px;width:100%"></div></div>
-    <div class="recent-item"><div class="sk" style="height:36px;width:100%"></div></div>
-    <div class="recent-item"><div class="sk" style="height:36px;width:100%"></div></div>
+<!-- הזנות אחרונות -->
+<div class="sec">
+  <div class="sec-title">🕐  אחרונות</div>
+  <div class="recent-pad" id="recentList">
+    <div class="r-item"><div class="sk-light" style="height:40px;width:100%"></div></div>
+    <div class="r-item"><div class="sk-light" style="height:40px;width:100%"></div></div>
+    <div class="r-item"><div class="sk-light" style="height:40px;width:100%"></div></div>
   </div>
 </div>
 
-<div class="warn-note">
+<div class="warn">
   ⚠️ תלוש שכר מתקבל ב-10 לחודש<br>ייתכן שסכומים מתחילת החודש הבא ייכנסו לתלוש הנוכחי
+</div>
+
+<!-- STICKY SAVE -->
+<div class="save-bar">
+  <button class="btn-save" id="btnSave" onclick="save()">✅  שמור</button>
 </div>
 
 <div id="toast"></div>
@@ -390,17 +396,16 @@
     String(td.getMonth()+1).padStart(2,'0') + '-' +
     String(td.getDate()).padStart(2,'0');
 
-  let selectedShift = '';
+  let shiftVal = '';
 
-  function selectShift(val, btn) {
-    selectedShift = val;
-    document.getElementById('shift').value = val;
-    document.querySelectorAll('.shift-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+  function pick(btn, val) {
+    shiftVal = val;
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('on'));
+    btn.classList.add('on');
   }
 
-  function ils(n)  { return '₪' + Math.round(Math.abs(n)).toLocaleString('he-IL'); }
-  function ils2(n) { return '₪' + Math.abs(n).toFixed(2); }
+  function r(n)  { return Math.round(Math.abs(n)).toLocaleString('he-IL'); }
+  function f2(n) { return Math.abs(n).toFixed(2); }
 
   function calc() {
     const owed  = parseFloat(document.getElementById('owed').value)  || 0;
@@ -409,28 +414,27 @@
     const total = cash + chk;
     const diff  = total - owed;
 
-    document.getElementById('cOwed').textContent  = ils(owed);
-    document.getElementById('cTotal').textContent = ils(total);
+    document.getElementById('cOwed').textContent  = '₪' + r(owed);
+    document.getElementById('cTotal').textContent = '₪' + r(total);
 
-    const pill = document.getElementById('diffPill');
-    pill.className = 'diff-pill';
+    const tag = document.getElementById('diffTag');
+    tag.className = 'diff-tag';
     if (diff > 0.005) {
-      pill.classList.add('d-pos');
-      pill.textContent = 'הפרש: +' + ils2(diff) + '  ✓ קיבלת יותר';
+      tag.classList.add('dt-pos');
+      tag.textContent = 'הפרש: +₪' + f2(diff) + '  ✓ קיבלת יותר';
     } else if (diff < -0.005) {
-      pill.classList.add('d-neg');
-      pill.textContent = 'הפרש: -' + ils2(Math.abs(diff)) + '  ⚠️ עוד חסר';
+      tag.classList.add('dt-neg');
+      tag.textContent = 'הפרש: -₪' + f2(-diff) + '  ⚠️ עוד חסר';
     } else {
-      pill.classList.add('d-zero');
-      pill.textContent = 'הפרש: ₪0.00  ✓ מדויק';
+      tag.classList.add('dt-zero');
+      tag.textContent = owed > 0 ? 'הפרש: ₪0.00  ✓ מדויק!' : 'הפרש: ₪0.00';
     }
   }
 
   function save() {
-    if (!document.getElementById('date').value) { toast('נא להזין תאריך', 'err'); return; }
+    if (!document.getElementById('date').value) { toast('נא להזין תאריך','err'); return; }
     const btn = document.getElementById('btnSave');
     btn.disabled = true; btn.textContent = '⏳ שומר...';
-
     google.script.run
       .withSuccessHandler(res => {
         btn.disabled = false; btn.textContent = '✅  שמור';
@@ -443,7 +447,7 @@
       })
       .addEntry({
         date:  document.getElementById('date').value,
-        shift: document.getElementById('shift').value,
+        shift: shiftVal,
         hours: document.getElementById('hours').value,
         owed:  document.getElementById('owed').value,
         cash:  document.getElementById('cash').value,
@@ -453,70 +457,67 @@
   }
 
   function clearForm() {
-    const td2 = new Date();
+    const n = new Date();
     document.getElementById('date').value =
-      td2.getFullYear() + '-' + String(td2.getMonth()+1).padStart(2,'0') + '-' + String(td2.getDate()).padStart(2,'0');
+      n.getFullYear() + '-' + String(n.getMonth()+1).padStart(2,'0') + '-' + String(n.getDate()).padStart(2,'0');
     ['hours','owed','cash','check','notes'].forEach(id => document.getElementById(id).value = '');
-    selectedShift = '';
-    document.getElementById('shift').value = '';
-    document.querySelectorAll('.shift-btn').forEach(b => b.classList.remove('active'));
+    shiftVal = '';
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('on'));
     calc();
   }
 
   function toast(msg, type) {
     const el = document.getElementById('toast');
     el.textContent = msg;
-    el.className = 'show-' + type;
+    el.className = type;
+    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in')));
     clearTimeout(el._t);
-    el._t = setTimeout(() => { el.className = ''; }, 2800);
+    el._t = setTimeout(() => { el.classList.remove('in'); }, 2600);
   }
 
   function loadSummary() {
     google.script.run
       .withSuccessHandler(s => {
-        document.getElementById('monthBadge').textContent = s.month;
-        const diff = s.diff;
-        const diffCls = diff >= 0 ? 'diff-pos' : 'diff-neg';
-        const diffSign = diff >= 0 ? '+' : '';
-        document.getElementById('summaryStrip').innerHTML = `
-          <div class="strip-item">
-            <div class="strip-label">ימי עבודה</div>
-            <div class="strip-value">${s.days} ימים</div>
+        const d = s.diff, pos = d >= 0;
+        document.getElementById('summaryRow').innerHTML =
+          `<div class="s-box">
+            <div class="s-lbl">ימי עבודה</div>
+            <div class="s-val">${s.days}</div>
           </div>
-          <div class="strip-item">
-            <div class="strip-label">סה"כ מגיע</div>
-            <div class="strip-value">${ils(s.owed)}</div>
+          <div class="s-box">
+            <div class="s-lbl">סכום מגיע</div>
+            <div class="s-val">₪${r(s.owed)}</div>
           </div>
-          <div class="strip-item ${diffCls}">
-            <div class="strip-label">הפרש</div>
-            <div class="strip-value">${diffSign}${ils(diff)}</div>
-          </div>
-        `;
+          <div class="s-box ${pos?'pos':'neg'}">
+            <div class="s-lbl">הפרש</div>
+            <div class="s-val">${pos?'+':'-'}₪${r(d)}</div>
+          </div>`;
+        document.querySelector('.top-bar h1').textContent = '💰 ' + s.month;
       })
       .getCurrentMonthSummary();
   }
 
   function loadRecent() {
     google.script.run
-      .withSuccessHandler(entries => {
+      .withSuccessHandler(list => {
         const el = document.getElementById('recentList');
-        if (!entries || !entries.length) {
-          el.innerHTML = '<div class="empty-state">אין הזנות עדיין החודש</div>';
+        if (!list || !list.length) {
+          el.innerHTML = '<div class="empty">אין הזנות עדיין החודש</div>';
           return;
         }
-        el.innerHTML = entries.map(e => {
+        el.innerHTML = list.map(e => {
           const diff = parseFloat(e.diff) || 0;
           const cls  = diff >= 0 ? 'pos' : 'neg';
           const sign = diff >= 0 ? '+' : '-';
           const meta = [e.day, e.shift, e.hours ? e.hours + ' שע\'' : ''].filter(Boolean).join(' · ');
-          return `<div class="recent-item">
-            <div class="ri-left">
-              <div class="ri-date">${e.date}</div>
-              <div class="ri-meta">${meta}</div>
+          return `<div class="r-item">
+            <div>
+              <div class="r-date">${e.date}</div>
+              <div class="r-meta">${meta}</div>
             </div>
-            <div class="ri-right">
-              <div class="ri-total">${ils(e.received)}</div>
-              <div class="ri-diff ${cls}">${sign}${ils2(Math.abs(diff))} הפרש</div>
+            <div>
+              <div class="r-amt">₪${r(e.received)}</div>
+              <div class="r-diff ${cls}">${sign}₪${f2(Math.abs(diff))}</div>
             </div>
           </div>`;
         }).join('');
